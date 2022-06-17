@@ -1,0 +1,152 @@
+{%- liquid
+  assign w_sm = 6
+  assign w_md = 12 | divided_by: section.settings.item_per_row
+  if section.settings.item_per_row <= 2
+    assign w_sm = w_md
+  endif  
+  -%}
+
+<div class="collection-list section" 
+    style="
+      --color-heading: {{ section.settings.heading_color.red }},{{ section.settings.heading_color.green }},{{ section.settings.heading_color.blue }};
+      --color-link: {{ section.settings.link_color.red }}, {{ section.settings.link_color.green }}, {{ section.settings.link_color.blue }};
+      background-color: {{ section.settings.background_color }};
+      margin: {{ section.settings.container_margin | default: 'inherit' }}; 
+      padding: {{ section.settings.container_padding | default: 'inherit' }}" 
+      data-ui-component="Collection List Section"
+      >
+  <div class="collection-list__container {% if section.settings.container_fluid == true %} ctnr-fld {% else %}ctnr{% endif %}">
+    {% if section.settings.sub_heading != blank %}
+      <div class="collection-list__sub-heading tt-aln-ctr" style="color: {{ section.settings.heading_color | default: 'unset' }};"> {{ section.settings.sub_heading }}</div>
+    {% endif %}
+    <h2 class="collection-list__heading{% if section.settings.heading == blank %} dpy-ne{% endif %} tt-aln-ctr">{{ section.settings.heading }}</h2>
+    <div class="collection-list__row collections rw">
+      {% for block in section.blocks limit: section.blocks.size %}
+        <div class="collection__item clm" style="--wh-xs: 12;--wh-md: {{ w_md }};--wh-sm: {{ w_sm }};">
+          {%- liquid
+            assign collection = nil
+            assign collection = collections[block.settings.collection]
+          -%}
+          {%- render 'card-collection', collection: collection, item_per_row: section.settings.item_per_row, is_first: forloop.first, item_height_ratio: section.settings.item_height_ratio -%}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "t:sections.collection_list.name",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:general.layout.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "container_fluid",
+      "label": "t:general.layout.enable_fluid_layout"
+    },
+    {
+      "type": "text",
+      "id": "container_margin",
+      "label": "t:general.margin.label",
+      "placeholder": "10px 20px 10px 20px",
+      "info": "t:general.margin.info"
+    },
+    {
+      "type": "text",
+      "id": "container_padding",
+      "label": "t:general.padding.label",
+      "default": "50px 0 30px",
+      "placeholder": "10px 20px 10px 20px",
+      "info": "t:general.padding.info"
+    },
+    {
+      "type": "header",
+      "content": "t:general.content.label"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:general.heading.label",
+      "placeholder": "t:general.heading.placeholder",
+      "default": "Collection List"
+    },
+    {
+      "type": "text",
+      "id": "sub_heading",
+      "label": "t:general.sub_heading.label"
+    },
+    {
+      "type": "range",
+      "id": "item_per_row",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "label": "t:general.item_per_row.label",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "item_height_ratio",
+      "min": 25,
+      "max": 100,
+      "step": 25,
+      "unit": "%",
+      "label": "t:general.item_height_ratio.label",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "t:general.color.content"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:general.background.label"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "t:general.heading.label"
+    },
+    {
+      "type": "color",
+      "id": "link_color",
+      "label": "t:general.link.label"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "t:sections.collection_list.blocks.item.name",
+      "settings": [
+        {
+          "id": "collection",
+          "type": "collection",
+          "label": "t:sections.collection_list.blocks.item.settings.collection.label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.collection_list.name",
+      "blocks": [
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

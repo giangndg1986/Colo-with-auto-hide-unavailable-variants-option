@@ -1,0 +1,272 @@
+{%- liquid 
+	assign header_style = section.settings.header_style
+	assign logo_align = section.settings.logo_alignment
+	if logo_align == 'jtfy-ctt-ctr' and header_style == 'outside'
+		assign logo_position = 'pstn-asle'
+	endif
+	assign nav_alignment = section.settings.nav_alignment
+-%}
+
+<sht-header id="header">
+	{% render 'search-bar' %}
+	<div class="header header--{{ header_style }} pstn-rlte" 
+	data-section-id="{{ section.id }}" 
+	data-ui-component="Header Section"
+	style=" --logo-size: {{ section.settings.logo_width }};
+					--header-link-color: {{ section.settings.link_color }};
+					--background-color: {{ section.settings.background_color }};
+					--color: {{ section.settings.text_color }};
+					--nav-background-color: {{ section.settings.nav_background_color }};
+					--nav-link-color: {{ section.settings.nav_link_color }};
+					--nav-link-hover-color: {{ section.settings.nav_link_hover_color }};
+					--sub-nav-link-color: {{ section.settings.subnav_link_color }};
+					--sub-nav-link-hover-color: {{ section.settings.subnav_link_hover_color }};
+					--sub-nav-background-color: {{ section.settings.subnav_background_color }};
+					"
+	>
+		<div class="ctnr">
+			<div class="rw">
+				<div class="clm">
+					<div class="dpy-flx middle-xs {{ logo_align }} aln-its-ctr pstn-rlte">
+						<div class="header__logo">
+							{%- if request.page_type == 'index' -%}
+								<h1>
+							{%- endif -%}
+								<a href="{{ routes.root_url }}">
+									{%- if section.settings.logo != blank -%}
+                  {%- assign image_size_2x = section.settings.logo_width | times: 2 | at_most: 5760 -%}
+                    <img srcset="{{ section.settings.logo | image_url: width: section.settings.logo_width }} 1x, {{ section.settings.logo | image_url: width: image_size_2x }} 2x"
+                    src="{{ section.settings.logo | image_url: width: section.settings.logo_width }}"
+                    loading="lazy"
+                    class="header__logo-image wh-100pct ojt-ft-ctn"
+                    width="{{ section.settings.logo.width }}"
+                    height="{{ section.settings.logo.height }}"
+                    alt="{{ section.settings.logo.alt | default: shop.name | escape }}" />
+								{%- else -%}
+									<span class="h2">{{ shop.name }}</span>
+								{%- endif -%}
+								</a>
+							{%- if request.page_type == 'index' -%}
+								</h1>
+							{%- endif -%}	
+						</div>
+						{% if header_style == 'inside' %}
+							<div class="header__nav js-header__nav zidx-3 flx-fill">
+								{% liquid
+									render 'nav-desktop', nav_alignment: nav_alignment
+									%}
+							</div>
+						{% endif %}
+						<div class="header__icons {{ logo_position }}">
+							<div class="dpy-flx end-xs">
+								<a href="#" aria-label="{{ 'accessibility.search' | t }}" id="search-bar-trigger-open" class="header__link header__icon header__search-trigger dpy-flx js-search-bar-trigger no-js-hidden">
+									{% render 'icon-search' %}
+								</a>
+								<noscript>
+									<a href="#header" aria-label="{{ 'accessibility.search' | t }}" id="search-bar-trigger-open" class="header__link header__icon header__search-trigger dpy-flx">
+										{% render 'icon-search' %}
+									</a>
+									<a href="#" aria-label="{{ 'accessibility.search' | t }}" id="search-bar-trigger-close" class="header__link header__icon header__search-trigger dpy-flx">
+										{% render 'icon-search' %}
+									</a>
+								</noscript>
+								{% if shop.customer_accounts_enabled %}
+									{% if customer %}
+										<a href="/account" aria-label="{{ 'accessibility.account' | t }}"  class="header__account header__icon header__link dpy-flx">
+											{% render 'icon-user' %}
+										</a>
+									{% else %}
+										<a href="/account/login" aria-label="{{ 'accessibility.user' | t }}" class="header__icon header__account header__link dpy-flx">
+											{% render 'icon-user' %}
+										</a>
+									{% endif %}
+								{% endif %}
+								<a href="/cart" class="header__icon header__cart header__link dpy-flx pstn-rlte" id="HeaderCartStatus">
+									{% render 'header-cart-status', cart: cart %}
+								</a>
+								{% unless linklists[section.settings.main_linklist] == blank %}
+									<button class="button--toggle-nav js-mobile-nav-trigger dpy-ne-md dpy-blk" aria-label="{{ 'accessibility.mobile_menu' | t }}">
+										<span></span>
+										<span></span>
+										<span></span>
+									</button>
+								{% endunless %}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>	
+		{% if header_style == 'outside' %}
+			<div class="navigation--outside">
+				<div class="ctnr">
+				<div class="rw">
+					<div class="header__nav header__nav--outside js-header__nav clm zidx-3">
+						{% liquid
+							render 'nav-desktop', nav_alignment: nav_alignment
+							%}
+					</div>
+				</div>
+				
+				</div>
+			</div>
+		{% endif %}
+	</div>
+</sht-header>
+{% if request.page_type == 'index' %}
+	{% assign potential_action_target = shop.url | append: routes.search_url | append: "?q={search_term_string}" %}
+	<script type="application/ld+json">
+	{
+		"@context": "http://schema.org",
+		"@type": "WebSite",
+		"name": {{ shop.name | json }},
+		"potentialAction": {
+		"@type": "SearchAction",
+		"target": {{ potential_action_target | json }},
+		"query-input": "required name=search_term_string"
+		},
+		"url": {{ shop.url | append: page.url | json }}
+	}
+	</script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:sections.header.name",
+  "settings": [
+    {
+      "type": "select",
+      "id": "header_style",
+      "label": "t:sections.header.settings.layout.label",
+      "default": "inside",
+      "options": [
+        {
+          "value": "inside",
+          "label": "t:sections.header.settings.layout.options_1.label"
+        },
+        {
+          "value": "outside",
+          "label": "t:sections.header.settings.layout.options_2.label"
+        }
+      ]
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.header.settings.color.background_color.label",
+      "default": "#222"
+    },
+    {
+      "type": "color",
+      "id": "link_color",
+      "label": "t:sections.header.settings.color.icon_color.label",
+      "default": "#fff"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.header.settings.logo.content"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "t:sections.header.settings.logo_image.label"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 50,
+      "max": 250,
+      "step": 10,
+      "label": "t:sections.header.settings.logo_width.label",
+      "default": 100
+    },
+    {
+      "type": "select",
+      "id": "logo_alignment",
+      "label": "t:sections.header.settings.logo_alignment.label",
+      "default": "jtfy-ctt-spe-bwn",
+      "info": "t:sections.header.settings.logo_alignment.info",
+      "options": [
+        {
+          "value": "jtfy-ctt-spe-bwn",
+          "label": "t:sections.header.settings.logo_alignment.options_1.label"
+        },
+        {
+          "value": "jtfy-ctt-ctr",
+          "label": "t:sections.header.settings.logo_alignment.options_2.label"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:sections.header.settings.navigation.content"
+    },
+    {
+      "type": "link_list",
+      "id": "main_linklist",
+      "label": "t:sections.header.settings.main_link.label",
+      "default": "main-menu"
+    },
+    {
+      "type": "select",
+      "id": "nav_alignment",
+      "label": "t:sections.header.settings.menu_alignment.label",
+      "default": "main-nav--center jtfy-ctt-ctr",
+      "options": [
+        {
+          "value": "main-nav--left jtfy-ctt-flx-stt",
+          "label": "t:sections.header.settings.menu_alignment.options_1.label"
+        },
+        {
+          "value": "main-nav--center jtfy-ctt-ctr",
+          "label": "t:sections.header.settings.menu_alignment.options_2.label"
+        },
+        {
+          "value": "main-nav--right jtfy-ctt-flx-ed",
+          "label": "t:sections.header.settings.menu_alignment.options_3.label"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:sections.header.settings.navigation_color.content"
+    },
+    {
+      "type": "color",
+      "id": "nav_background_color",
+      "label": "t:sections.header.settings.navigation_background_color.label",
+      "default": "#222"
+    },
+    {
+      "type": "color",
+      "id": "nav_link_color",
+      "label": "t:sections.header.settings.navigation_link_color.label",
+      "default": "#fff"
+    },
+    {
+      "type": "color",
+      "id": "nav_link_hover_color",
+      "label": "t:sections.header.settings.navigation_link_hover_color.label",
+      "default": "#eee"
+    },
+    {
+      "type": "color",
+      "id": "subnav_background_color",
+      "label": "t:sections.header.settings.sub_navigation_background_color.label",
+      "default": "#fff"
+    },
+    {
+      "type": "color",
+      "id": "subnav_link_color",
+      "label": "t:sections.header.settings.sub_link_color.label",
+      "default": "#000"
+    },
+    {
+      "type": "color",
+      "id": "subnav_link_hover_color",
+      "label": "t:sections.header.settings.sub_link_hover_color.label",
+      "default": "#333"
+    }
+  ]
+}
+{% endschema %}

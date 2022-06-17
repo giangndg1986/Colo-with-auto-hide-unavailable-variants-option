@@ -1,0 +1,417 @@
+{%- liquid
+  assign w_sm = 6
+  assign w_md = 12 | divided_by: section.settings.item_per_row
+  
+  if section.settings.item_per_row <= 2
+    assign w_sm = w_md
+  endif
+-%}
+
+<div class="content-list-with-icon content-list-with-icon--{{ section.settings.content_alignment }} section" 
+  style="
+  --color-heading: {{ section.settings.heading_color.red }},{{ section.settings.heading_color.green }},{{ section.settings.heading_color.blue }};
+  --color-text: {{ section.settings.text_color.red }}, {{ section.settings.text_color.green }}, {{ section.settings.text_color.blue }};
+  --icon-color: {{ section.settings.icon_color.red }}, {{ section.settings.icon_color.green }}, {{ section.settings.icon_color.blue }};
+  --icon-background: {{ section.settings.icon_background.red }}, {{ section.settings.icon_background.green }}, {{ section.settings.icon_background.blue }};
+  background-color: {{ section.settings.background_color }};
+  margin: {{ section.settings.container_margin | default: 'inherit' }};
+  padding: {{ section.settings.container_padding | default: 'inherit' }}" data-ui-component="Content List With Text Icon Section">
+  <div class="content-list-with-icon__container {% if section.settings.container_fluid == true %} ctnr-fld {% else %}ctnr {% endif %}">
+    {% if section.settings.sub_heading != blank %}
+      <div class="content-list-with-image__sub-heading tt-aln-ctr"> {{ section.settings.sub_heading }}</div>
+    {% endif %}
+    <h2 class="section__heading content-list-with-icon__heading{% if section.settings.heading == blank %} dpy-ne{% endif %} tt-aln-ctr">{{ section.settings.heading }}</h2>
+    <div class="content-list-with-icon__items rw">
+      {%- for block in section.blocks -%}
+        <div class="content-list-with-icon__item grd clm content-list-icon--{{ section.settings.content_alignment }}" style="--wh-xs: 12;--wh-md: {{ w_md }};--wh-sm: {{ w_sm }};--grd-gp: var(--gutter-base);text-align: {{ section.settings.content_alignment }};--grid-template-columns: {{ section.settings.content_alignment | replace: 'start', '104px 1fr' | replace: 'end', '1fr 104px' }}">
+          <div class="content-list-with-icon__item__icon icon-align--{{ section.settings.content_alignment }} icon--background {{ section.settings.icon_size }} {{ block.settings.icon_style }} dpy-flx aln-its-ctr jtfy-ctt-ctr" style="justify-self: {{ section.settings.content_alignment }};order: {{ section.settings.content_alignment | replace: 'end', '2' }};">
+            {% render 'icon-loader', icon: block.settings.icon %}
+          </div>
+          <div class="content-list-with-image__content">
+            <h3 class="content-list-with-image__item__heading hdg-5 mgn-0 mgn-btm-8">{{ block.settings.heading }}</h3>
+            <div class="content-list-with-image__item__description">{{ block.settings.description }}</div>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div> 
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.content_list_with_icon.name",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:general.layout.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "container_fluid",
+      "label": "t:general.layout.enable_fluid_layout"
+    },
+    {
+      "type": "text",
+      "id": "container_margin",
+      "label": "t:general.margin.label",
+      "placeholder": "10px 20px 10px 20px",
+      "info": "t:general.margin.info"
+    },
+    {
+      "type": "text",
+      "id": "container_padding",
+      "label": "t:general.padding.label",
+      "placeholder": "10px 20px 10px 20px",
+      "default": "50px 0 30px",
+      "info": "t:general.padding.info"
+    },
+    {
+      "type": "header",
+      "content": "t:general.content.label"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:general.heading.label",
+      "placeholder": "t:general.heading.placeholder",
+      "default": "Content list with icon"
+    },
+    {
+      "type": "text",
+      "id": "sub_heading",
+      "label": "t:general.sub_heading.label"
+    },
+    {
+      "type": "range",
+      "id": "item_per_row",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "label": "t:general.item_per_row.label",
+      "default": 3
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "t:general.content_alignment.label",
+      "default": "start",
+      "options": [
+        {
+          "value": "start",
+          "label": "t:general.content_alignment.options.left"
+        },
+        {
+          "value": "center",
+          "label": "t:general.content_alignment.options.center"
+        },
+        {
+          "value": "end",
+          "label": "t:general.content_alignment.options.right"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "icon_size",
+      "label": "t:sections.content_list_with_icon.settings.icon_size.label",
+      "default": "icon--default",
+      "options": [
+        {
+          "value": "icon--default",
+          "label": "t:sections.content_list_with_icon.settings.icon_size.options.default"
+        },
+        {
+          "value": "icon--large",
+          "label": "t:sections.content_list_with_icon.settings.icon_size.options.large"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:general.color.content"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:general.background.label"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "t:general.heading.label"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:general.text.label"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "t:sections.content_list_with_icon.settings.icon_color.label"
+    },
+    {
+      "type": "color",
+      "id": "icon_background",
+      "label": "t:sections.content_list_with_icon.settings.icon_background.label"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "t:sections.content_list_with_icon.blocks.item.name",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "t:sections.content_list_with_icon.blocks.item.settings.icon.label",
+          "default": "check-mark",
+          "options": [
+            {
+              "value": "bar-chart",
+              "label": "Bar chart"
+            },
+            {
+              "value": "bar-code",
+              "label": "Bar code"
+            },
+            {
+              "value": "bookmark",
+              "label": "Bookmark"
+            },
+            {
+              "value": "box",
+              "label": "Box"
+            },
+            {
+              "value": "building",
+              "label": "Building"
+            },
+            {
+              "value": "calendar",
+              "label": "Calendar"
+            },
+            {
+              "value": "chat-bubble",
+              "label": "Chat bubble"
+            },
+            {
+              "value": "check-mark",
+              "label": "Check"
+            },
+            {
+              "value": "clock",
+              "label": "Clock"
+            },
+            {
+              "value": "credit-card",
+              "label": "Credit card"
+            },
+            {
+              "value": "document",
+              "label": "Document"
+            },
+            {
+              "value": "dress",
+              "label": "Dress"
+            },
+            {
+              "value": "eye",
+              "label": "Eye"
+            },
+            {
+              "value": "file",
+              "label": "File"
+            },
+            {
+              "value": "gift",
+              "label": "Gift"
+            },
+            {
+              "value": "globe",
+              "label": "Globe"
+            },
+            {
+              "value": "half-star",
+              "label": "Half star"
+            },
+            {
+              "value": "iron",
+              "label": "Iron"
+            },
+            {
+              "value": "leaf",
+              "label": "Leaf"
+            },
+            {
+              "value": "leather",
+              "label": "Leather"
+            },
+            {
+              "value": "lock-off",
+              "label": "Lock off"
+            },
+            {
+              "value": "lock-on",
+              "label": "Lock on"
+            },
+            {
+              "value": "map-pin",
+              "label": "Map pin"
+            },
+            {
+              "value": "money",
+              "label": "Money"
+            },
+            {
+              "value": "pant",
+              "label": "Pant"
+            },
+            {
+              "value": "paper-plan",
+              "label": "Paper plan"
+            },
+            {
+              "value": "persons",
+              "label": "Persons"
+            },
+            {
+              "value": "price-tag",
+              "label": "Price-tag"
+            },
+            {
+              "value": "protect",
+              "label": "Protect"
+            },
+            {
+              "value": "question-mark",
+              "label": "Question mark"
+            },
+            {
+              "value": "question-mark-1",
+              "label": "Question mark 1"
+            },
+            {
+              "value": "receipt",
+              "label": "Receipt"
+            },
+            {
+              "value": "return",
+              "label": "Return"
+            },
+            {
+              "value": "ruler",
+              "label": "Ruler"
+            },
+            {
+              "value": "sale-off",
+              "label": "Sale off"
+            },
+            {
+              "value": "scan",
+              "label": "Scan"
+            },
+            {
+              "value": "settings",
+              "label": "Settings"
+            },
+            {
+              "value": "shirt",
+              "label": "Shirt"
+            },
+            {
+              "value": "shoe",
+              "label": "Shoe"
+            },
+            {
+              "value": "shop",
+              "label": "Shop"
+            },
+            {
+              "value": "smile",
+              "label": "Smile"
+            },
+            {
+              "value": "star",
+              "label": "Star"
+            },
+            {
+              "value": "support",
+              "label": "Support"
+            },
+            {
+              "value": "thumb-up",
+              "label": "Thumb up"
+            },
+            {
+              "value": "truck",
+              "label": "Truck"
+            },
+            {
+              "value": "wallet",
+              "label": "Wallet"
+            },
+            {
+              "value": "washing",
+              "label": "Washing"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "icon_style",
+          "label": "t:sections.content_list_with_icon.blocks.item.settings.icon_style.label",
+          "default": "",
+          "options": [
+            {
+              "value": "",
+              "label": "t:sections.content_list_with_icon.blocks.item.settings.icon_style.options.none"
+            },
+            {
+              "value": "icon--circle",
+              "label": "t:sections.content_list_with_icon.blocks.item.settings.icon_style.options.circle"
+            },
+            {
+              "value": "icon--square",
+              "label": "t:sections.content_list_with_icon.blocks.item.settings.icon_style.options.square"
+            },
+            {
+              "value": "icon--rounded",
+              "label": "t:sections.content_list_with_icon.blocks.item.settings.icon_style.options.rounded"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "t:general.heading.label",
+          "placeholder": "t:general.heading.placeholder",
+          "default": "Block Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "t:general.description.label",
+          "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua, ut enim ad minim.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.content_list_with_icon.name",
+      "blocks": [
+        {
+          "type": "item"
+        },
+        {
+          "type": "item"
+        },
+        {
+          "type": "item"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

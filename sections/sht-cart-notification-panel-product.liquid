@@ -1,0 +1,48 @@
+{%- if cart != empty -%} {%- for item in cart.items -%}
+<div
+  data-type="sht-cart-notification-panel-product-{{ item.id }}"
+  id="cart-notification-product-{{ item.id }}"
+  class="cart-item"
+>
+  {% if item.image %}
+  {{ item.image.src | image_url: width: 68, height: 68 | image_tag: alt: item.image.alt, loading: 'lazy', class: 'cart-notification-product__image border rounded' }}
+  
+  {% endif %}
+  <div>
+    <div class="h3 cart-notification-product__name mgz">
+      {{ item.product.title | escape }}
+    </div>
+
+    <p class="mgz subtext mb-12"><span class="cart-notification-product__price">{{ item.final_price | money }}</span> x <span class="cart-notification-product__quantity">{{ item.quantity }}</span></p>
+
+    <div class="mgz subtext">
+      {%- unless item.product.has_only_default_variant -%} 
+        <div class="df">
+          <span>{{ item.variant.title }}</span>
+        </div>
+      {%- endunless -%} 
+      {%- for property in item.properties -%}
+      {%- assign property_first_char = property.first | slice: 0 -%} 
+      {%- if property.last != blank and property_first_char != '_' -%}
+      <div>
+        <dt>{{ property.first }}:</dt>
+        <dd>
+          {%- if property.last contains '/uploads/' -%}
+          <a href="{{ property.last }}" class="link" target="_blank">
+            {{ property.last | split: "/" | last }}
+          </a>
+          {%- else -%}
+          {{ property.last }}
+          {%- endif -%}
+        </dd>
+      </div>
+      {%- endif -%} {%- endfor -%}
+    </div>
+    {%- if item.selling_plan_allocation != nil -%}
+    <p class="mgz mb-12">
+      {{ item.selling_plan_allocation.selling_plan.name }}
+    </p>
+    {%- endif -%}
+  </div>
+</div>
+{%- endfor -%} {%- endif -%}

@@ -1,0 +1,14 @@
+<div class="main-page-product" data-ui-component="Main Page Section">
+	<div class="main-page-product__container ctnr">
+		<h1 class="main-page-product__container__heading tt-aln-ctr section__heading">{{ page.title | escape }}</h1>
+		<div class="main-page-product__container__content">
+			{{ page.content }}
+		</div>
+	</div>
+</div>
+{% schema %}
+{
+  "name": "t:sections.main_page.name",
+  "class": "main-section"
+}
+{% endschema %}

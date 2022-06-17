@@ -1,0 +1,144 @@
+{% comment %}theme-check-disable ImgLazyLoading{% endcomment %}
+{%- liquid
+    assign placeholder = 'logo' | placeholder_svg_tag: 'logo-list__placeholder placeholder--svg wh-100pct ht-100pct mx-wh-100pct mx-ht-100pct ojt-ft-cvr'
+    assign w_sm = 6
+    assign w_md = 12 | divided_by: section.settings.item_per_row
+    assign image_width = '150, 320, 550, 750, 950, 1100, 1600'
+
+    if section.settings.item_per_row <= 2
+      assign w_sm = 12 | divided_by: section.settings.item_per_row
+    endif
+
+    assign sizes = "(min-width: 1200px) calc(100vw/ITEM_PER_ROW), (min-width: 1025px) calc(100vw/ITEM_PER_ROW), (min-width: 769px) calc(100vw/ITEM_PER_ROW), calc(100vw/2)" | replace: "ITEM_PER_ROW", section.settings.item_per_row
+  -%}
+<div class="logo-list" style="margin: {{ section.settings.container_margin | default: 'inherit' }}; padding: {{ section.settings.container_padding | default: 'inherit' }}" data-ui-component="Logo List Section">
+	<div class="logo-list__container{% if section.settings.container_fluid == true %} ctnr-fld {% else %} ctnr {% endif %}">
+    {% if section.settings.sub_heading != blank %}
+      <div class="logo-list__sub-heading tt-aln-ctr"> {{ section.settings.sub_heading | escape }}</div>
+    {% endif %}
+    <h2 class="section__heading logo-list__heading{% if section.settings.heading == blank %} dpy-ne{% endif %} tt-aln-ctr">{{ section.settings.heading | escape }}</h2>
+		<div class="rw">
+			{% for block in section.blocks %}
+				{%- assign image_item = placeholder -%}
+				{%- assign image_item = block.settings.image | image_url: width: block.settings.image.width | image_tag: widths: image_width, sizes: sizes, placeholder: "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==", alt: block.settings.image.src.alt, class: 'js-lazy-loading-image-item ojt-ft-cvr' -%}
+				<div class="logo-list__item clm" style="--wh-xs: 6;--wh-md: {{ w_md }};--wh-sm: {{ w_sm }};">
+					<div class="logo-list__item__image pstn-rlte">
+						{% if block.settings.link != blank %}
+	            <a href="{{ block.settings.link }}" target="{% if block.settings.open_in_new_tab %}_blank{% else %}_self{% endif %}" class="logo-list__item__link">
+						{% endif %}
+            {% render 'lazy-loading-image', image_item: image_item, lazy_image_loading_image_css: "no-js-hidden dpy-blk tt-aln-ctr", lazy_image_loading_spinner_css: "js-lazy-loading-image-spinner aln-ctr-mde pstn-asle ptr-ne", replace_srcset: true, is_first: forloop.first %} 
+					{% if block.settings.link != blank %}
+						</a>
+					{% endif %}
+					</div>
+				</div>
+			{%- endfor -%}
+		</div>
+	</div>
+</div>
+{% schema %}
+{
+  "name": "t:sections.logo_list.name",
+  "max_blocks": 20,
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:general.layout.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "container_fluid",
+      "label": "t:general.layout.enable_fluid_layout"
+    },
+    {
+      "type": "text",
+      "id": "container_margin",
+      "label": "t:general.margin.label",
+      "placeholder": "10px 20px 10px 20px",
+      "info": "t:general.margin.info"
+    },
+    {
+      "type": "text",
+      "id": "container_padding",
+      "label": "t:general.padding.label",
+      "placeholder": "10px 20px 10px 20px",
+      "default": "50px 0 30px",
+      "info": "t:general.padding.info"
+    },
+    {
+      "type": "range",
+      "id": "item_per_row",
+      "min": 2,
+      "max": 6,
+      "step": 2,
+      "label": "t:general.item_per_row.label",
+      "default": 6
+    },
+    {
+      "type": "header",
+      "content": "t:general.content.label"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:general.heading.label",
+      "placeholder": "t:general.heading.placeholder",
+      "default": "Logo List"
+    },
+    {
+      "type": "text",
+      "id": "sub_heading",
+      "label": "t:general.sub_heading.label"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "logo_image",
+      "name": "t:sections.logo_list.blocks.item.name",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:general.image.label"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "t:general.link.label"
+        },
+        {
+          "type": "checkbox",
+          "id": "open_in_new_tab",
+          "label": "t:sections.logo_list.blocks.item.settings.open_in_new_tab.label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.logo_list.name",
+      "category": "Image",
+      "blocks": [
+        {
+          "type": "logo_image"
+        },
+        {
+          "type": "logo_image"
+        },
+        {
+          "type": "logo_image"
+        },
+        {
+          "type": "logo_image"
+        },
+        {
+          "type": "logo_image"
+        },
+        {
+          "type": "logo_image"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

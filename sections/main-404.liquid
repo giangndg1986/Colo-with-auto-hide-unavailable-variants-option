@@ -1,0 +1,50 @@
+<div class="ctnr">
+  <div class="rw">
+    <div class="clm tt-aln-ctr">
+      <h1 class="page__title">{{ section.settings.heading }}</h1>
+      <div class="page__description">
+        {{ section.settings.description }}
+      </div>
+      {%- if section.settings.button_label != blank -%}
+        <a href="{%- if section.settings.button_link != blank -%} {{ section.settings.button_link }} {%- else -%}{{ routes.root_url }} {%- endif -%}" class="button button--primary button--large">
+          {{ section.settings.button_label }}
+        </a>
+      {% else %}
+        <a href="{{ routes.root_url }}" class="button button--primary button--large">
+          {{ 'templates.404.return_to_home' | t }}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "t:sections.main_404.name",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:general.heading.label",
+      "default": "Page not found!"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "t:general.description.label",
+      "default": "<p>Sorry, the page you are looking for doesn’t exist.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:general.button_label.label",
+      "default": "Return to home page"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:general.button_link.label",
+      "default": "/"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,207 @@
+{% if section.settings.top_bar %}
+	<div class="topbar" data-ui-component="Top Bar Section" 
+  style="background-color: {{ section.settings.background | default: 'transparent' }}; 
+  color: {{ section.settings.text | default: 'var(--color-body)' }};">
+		<div class="ctnr">
+			<div class="rw aln-its-ctr">
+				{% for block in section.blocks %}
+					<div class="clm" style="{{ block.settings.width }}; --times-fold: 1.3;">
+						<div class="topbar__{{ block.type }} {{ block.settings.alignment }}">
+							{% case block.type %}
+								{% when 'custom_content' %}
+									{% if block.settings.html != blank %}
+										{{ block.settings.html }}
+									{% endif %}
+								{% when 'menu' %}
+									{%- assign top_menus = block.settings.top_menus -%}
+										{% if linklists[top_menus].links.size > 0 %}
+											<ul class="top-bar__nav dpy-flx lt-ste-ne flx-wp logo logo-header">
+												{% for link in linklists[top_menus].links %}
+													<li>
+														<a href="{{ link.url }}" onMouseOver="this.style.opacity='0.8'" onMouseOut="this.style.opacity='1'" class="nav-link--topbar" style="color: {{ section.settings.link }}; padding: 0 var(--gutter-base);">{{ link.title }}</a>
+													</li>
+												{% endfor %}
+											</ul>
+										{% endif %}
+							{% endcase %}
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:sections.top_bar.name",
+  "max_blocks": 3,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "top_bar",
+      "label": "t:sections.top_bar.settings.show_top_bar.label",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:sections.top_bar.settings.header.content"
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "t:sections.top_bar.settings.background_color.label",
+      "default": "#222222"
+    },
+    {
+      "type": "color",
+      "id": "text",
+      "label": "t:sections.top_bar.settings.text_color.label",
+      "default": "#eee"
+    },
+    {
+      "type": "color",
+      "id": "link",
+      "label": "t:sections.top_bar.settings.link_color.label",
+      "default": "#fff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "custom_content",
+      "name": "t:sections.top_bar.blocks.custom_content.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "html",
+          "label": "t:sections.top_bar.blocks.custom_content.content",
+          "default": "Welcome to our store"
+        },
+        {
+          "type": "select",
+          "id": "alignment",
+          "label": "t:sections.top_bar.blocks.custom_content.text_alignment",
+          "options": [
+            {
+              "value": "tt-aln-lt",
+              "label": "t:sections.top_bar.blocks.custom_content.align_left"
+            },
+            {
+              "value": "tt-aln-ctr",
+              "label": "t:sections.top_bar.blocks.custom_content.align_center"
+            },
+            {
+              "value": "tt-aln-rt",
+              "label": "t:sections.top_bar.blocks.custom_content.align_right"
+            }
+          ],
+          "default": "tt-aln-ctr"
+        },
+        {
+          "type": "select",
+          "id": "width",
+          "label": "t:sections.top_bar.blocks.custom_content.block_width",
+          "default": "--wh-xs: 6; --wh-md: 6;",
+          "options": [
+            {
+              "value": "--wh-xs: 6; --wh-md: 3;",
+              "label": "25%"
+            },
+            {
+              "value": "--wh-xs: 6; --wh-md: 6;",
+              "label": "50%"
+            },
+            {
+              "value": "--wh-xs: 6; --wh-md: 9;",
+              "label": "75%"
+            },
+            {
+              "value": "--wh-xs: 12;",
+              "label": "100%"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "menu",
+      "name": "t:sections.top_bar.blocks.menu.name",
+      "settings": [
+        {
+          "type": "link_list",
+          "id": "top_menus",
+          "default": "footer",
+          "label": "t:sections.top_bar.blocks.menu.label"
+        },
+        {
+          "type": "select",
+          "id": "alignment",
+          "label": "t:sections.top_bar.blocks.menu.text_alignment",
+          "options": [
+            {
+              "value": "tt-aln-lt",
+              "label": "t:sections.top_bar.blocks.menu.align_left"
+            },
+            {
+              "value": "tt-aln-ctr",
+              "label": "t:sections.top_bar.blocks.menu.align_center"
+            },
+            {
+              "value": "tt-aln-rt",
+              "label": "t:sections.top_bar.blocks.menu.align_right"
+            }
+          ],
+          "default": "tt-aln-lt"
+        },
+        {
+          "type": "select",
+          "id": "width",
+          "label": "t:sections.top_bar.blocks.menu.block_width",
+          "default": "--wh-xs: 6; --wh-md: 6;",
+          "options": [
+            {
+              "value": "--wh-xs: 6; --wh-md: 3;",
+              "label": "25%"
+            },
+            {
+              "value": "--wh-xs: 6; --wh-md: 6;",
+              "label": "50%"
+            },
+            {
+              "value": "--wh-xs: 6; --wh-md: 9;",
+              "label": "75%"
+            },
+            {
+              "value": "--wh-xs: 12;",
+              "label": "100%"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "default": {
+    "settings": {
+      "top_bar": true
+    },
+    "blocks": [
+      {
+        "type": "menu",
+        "settings": {
+          "top_menus": "footer",
+          "width": "--wh-xs: 6; --wh-md: 3;",
+          "alignment": "tt-aln-lt"
+        }
+      },
+      {
+        "type": "custom_content",
+        "settings": {
+          "html": "Free shipping all orders over $50",
+          "width": "--wh-xs: 6; --wh-md: 6;",
+          "alignment": "tt-aln-ctr"
+        }
+      }
+    ]
+  }
+}
+{% endschema %}

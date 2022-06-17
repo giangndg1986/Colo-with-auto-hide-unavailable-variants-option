@@ -1,0 +1,72 @@
+
+    <header class="gift-card__header">
+        {% if section.settings.logo %}
+        {{ section.settings.logo | image_url: width: section.settings.logo.width | image_tag: alt: section.settings.logo.alt, loading: 'lazy', class: 'gift-card-logo' }}    
+        {% endif %}
+      <h1 class="gift-card__heading mgn-btm-4">{{ 'gift_cards.issued.subtext' | t }}</h1>
+    </header>
+    <main class="gift-card__content">
+      <div class="gift-card__image-wrapper pstn-rlte">
+          <div class="gift-card__price pstn-asle">
+              <p class="hdg-3">
+                  {{ gift_card.initial_value | money }}
+              </p>
+              {% comment %}
+              {%- if gift_card.enabled == false or gift_card.expired -%}
+                <p class="gift-card__label badge">{{ 'gift_cards.issued.expired' | t }}</p>
+              {%- endif -%}
+              {% endcomment %}
+            </div>
+        <img src="{{ 'gift-card/card.svg' | shopify_asset_url }}" alt="" class="gift-card__image" height="{{ 570 | divided_by: 1.5 }}" width="570" loading="lazy">
+        <input
+          type="text"
+          class="gift-card__number h3 pstn-asle pstn-ctr"
+          value="{{ gift_card.code | format_code }}"
+          aria-label="{{ 'gift_cards.issued.gift_card_code' | t }}"
+          readonly
+        >
+      </div>
+      <div class="gift-card__info-wrapper mgn-btm-32">
+      <div class="gift-card__information">
+          <p>{{ 'gift_cards.issued.redeem' | t }}</p>
+        {%- if gift_card.pass_url -%}
+          <a href="{{ gift_card.pass_url }}" class="gift_card__apple-wallet">
+            <img src="{{ 'gift-card/add-to-apple-wallet.svg' | shopify_asset_url }}" width="120" height="40" alt="{{ 'gift_cards.issued.add_to_apple_wallet' | t }}" loading="lazy">
+          </a>
+        {%- endif -%}
+      </div>
+      <div class="gift-card__qr-code dpy-flx jtfy-ctt-ctr" data-identifier="{{ gift_card.code | format_code }}"></div>
+      </div>
+      <div class="gift-card__buttons no-print gift-card__footer button-group">
+        <a
+          href="{{ shop.url }}"
+          class="button button--large button--primary"
+          target="_blank"
+          rel="noopener"
+          aria-describedby="a11y-new-window-message"
+        >
+          {{ 'gift_cards.issued.shop_link' | t }}
+        </a>
+        <button
+          class="button button--large button--outline"
+          onclick="window.print();">
+          {{ 'gift_cards.issued.print_gift_card' | t }}
+        </button>
+      </div>
+    </main>
+    <footer class="gift-card__footer pdg-tp-32 pdg-btm-32">
+    </footer>
+    
+{% schema %}
+{
+  "name": "t:sections.gift_card.name",
+  "class": "gift-card-section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "t:sections.gift_card.settings.logo.label"
+    }
+  ]
+}
+{% endschema %}

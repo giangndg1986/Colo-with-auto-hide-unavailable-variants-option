@@ -1,0 +1,96 @@
+{%- liquid 
+  assign item_per_row = section.settings.layout | replace: '--wh-xs: 12; --wh-sm: 10;', 1 | replace: '--wh-xs: 12; --wh-sm: 6; --wh-md: 4;', 3
+-%}
+{%- paginate blog.articles by section.settings.item_per_page -%}
+  <div class="main-blog" data-ui-component="Main Blogs Section">
+    <div class="ctnr">
+      <div class="rw">
+        <div class="clm">
+          <h1 class="main-cart__heading tt-aln-ctr mgn-btm-32"">{{ blog.title | escape }}</h1>
+        </div>
+      </div>
+      <div class="rw article-list {{ section.settings.layout | replace: '--wh-xs: 12; --wh-sm: 10;', 'jtfy-ctt-ctr' | replace: '--wh-xs: 12; --wh-sm: 6; --wh-md: 4;', '' }}">
+        {%- for article in blog.articles -%}
+        <div class="clm" style="{{ section.settings.layout }}">
+          {% render 'card-article', 
+          article: article, 
+          show_image: section.settings.show_image, 
+          show_author: section.settings.show_author, 
+          show_date: section.settings.show_date,
+          item_per_row: item_per_row,
+          is_first: forloop.first
+          %}
+        </div>
+        {%- endfor -%}
+      </div>
+      {%- render 'pagination', paginate: paginate -%}
+    </div>
+  </div>
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "t:sections.main_blog.name",
+  "class": "main-section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout",
+      "options": [
+        {
+          "value": "--wh-xs: 12; --wh-sm: 6; --wh-md: 4;",
+          "label": "t:sections.main_blog.settings.layout.options.grid"
+        },
+        {
+          "value": "--wh-xs: 12; --wh-sm: 10;",
+          "label": "t:sections.main_blog.settings.layout.options.list"
+        }
+      ],
+      "default": "--wh-xs: 12; --wh-sm: 10;",
+      "label": "t:sections.main_blog.settings.layout.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.main_blog.settings.header.content"
+    },
+    {
+      "type": "range",
+      "id": "item_per_page",
+      "label": "t:sections.main_blog.settings.item_per_page.label",
+      "min": 6,
+      "max": 24,
+      "step": 1,
+      "default": 6,
+      "info": "t:sections.main_blog.settings.item_per_page.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "default": true,
+      "label": "t:sections.main_blog.settings.show_image.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "default": true,
+      "label": "t:sections.main_blog.settings.show_date.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_author",
+      "default": false,
+      "label": "t:sections.main_blog.settings.show_author.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_excerpt",
+      "label": "t:sections.main_blog.settings.show_excerpt.label",
+      "default": true
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.main_blog.settings.paragraph.content"
+    }
+  ]
+}
+{% endschema %}

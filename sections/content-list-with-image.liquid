@@ -1,0 +1,164 @@
+{%- liquid
+  assign w_sm = 6
+  assign w_md = 12 | divided_by: section.settings.item_per_row
+
+  if section.settings.item_per_row <= 2
+    assign w_sm = w_md
+  endif
+  assign column_alignment = section.settings.column_alignment
+  
+-%}
+<div class="content-list-with-image content-list-with-image--{{ column_alignment }} section" 
+style="
+  --color-heading: {{ section.settings.heading_color.red }},{{ section.settings.heading_color.green }},{{ section.settings.heading_color.blue }};
+  --color-text: {{ section.settings.text_color.red }}, {{ section.settings.text_color.green }}, {{ section.settings.text_color.blue }};
+  background-color: {{ section.settings.background_color }};
+  
+margin: {{ section.settings.container_margin | default: 'inherit' }}; padding: {{ section.settings.container_padding | default: 'inherit' }}" data-ui-component="Content List With Image Section">
+  <div class="content-list-with-image__container {% if section.settings.container_fluid == true %} ctnr-fld {% else %} ctnr{% endif %}">
+    {% if section.settings.sub_heading != blank %}
+      <div class="content-list-with-image__sub-heading tt-aln-ctr" style="color: {{ section.settings.heading_color | default: 'unset' }};"> {{ section.settings.sub_heading }}</div>
+    {% endif %}
+    <h2 class="section__heading content-list-with-image__heading{% if section.settings.heading == blank %} dpy-ne{% endif %} tt-aln-ctr">{{ section.settings.heading }}</h2>
+    <div class="content-list-with-image__row rw">
+      {%- for block in section.blocks -%}
+      <div class="content-list-with-image__item clm {{ column_alignment }}" style="--wh-xs: 12;--wh-md: {{ w_md }};--wh-sm: {{ w_sm }};">
+        {% render 'card-item', block: block, item_per_row: section.settings.item_per_row, is_first: forloop.first %}
+      </div>
+      {%- endfor -%}
+    </div>  
+  </div>
+</div>
+{% schema %}
+{
+  "name": "t:sections.content_list_with_image.name",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:general.layout.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "container_fluid",
+      "label": "t:general.layout.enable_fluid_layout"
+    },
+    {
+      "type": "text",
+      "id": "container_margin",
+      "label": "t:general.margin.label",
+      "placeholder": "10px 20px 10px 20px",
+      "info": "t:general.margin.info"
+    },
+    {
+      "type": "text",
+      "id": "container_padding",
+      "label": "t:general.padding.label",
+      "placeholder": "10px 20px 10px 20px",
+      "default": "50px 0 30px",
+      "info": "t:general.padding.info"
+    },
+    {
+      "type": "header",
+      "content": "t:general.content.label"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:general.heading.label",
+      "placeholder": "t:general.heading.placeholder",
+      "default": "Content list with image"
+    },
+    {
+      "type": "text",
+      "id": "sub_heading",
+      "label": "t:general.sub_heading.label"
+    },
+    {
+      "type": "range",
+      "id": "item_per_row",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "label": "t:general.item_per_row.label",
+      "default": 3
+    },
+    {
+      "type": "select",
+      "id": "column_alignment",
+      "label": "t:general.column_alignment.label",
+      "default": "tt-aln-lt",
+      "options": [
+        {
+          "value": "tt-aln-lt",
+          "label": "t:general.column_alignment.options.left"
+        },
+        {
+          "value": "tt-aln-ctr",
+          "label": "t:general.column_alignment.options.center"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:general.color.content"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:general.background.label"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "t:general.heading.label"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:general.text.label"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "t:sections.content_list_with_image.blocks.item.name",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:sections.content_list_with_image.blocks.item.settings.image.label"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "t:general.heading.label",
+          "placeholder": "t:general.heading.placeholder",
+          "default": "Block Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "t:general.description.label",
+          "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.content_list_with_image.name",
+      "blocks": [
+        {
+          "type": "item"
+        },
+        {
+          "type": "item"
+        },
+        {
+          "type": "item"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

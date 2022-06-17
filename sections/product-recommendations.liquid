@@ -1,0 +1,64 @@
+{% comment %}theme-check-disable ImgLazyLoading{% endcomment %}
+{%- liquid
+  assign w_sm = 6
+  assign w_md = 12 | divided_by: section.settings.item_per_row
+
+  if section.settings.item_per_row <= 2
+    assign w_sm = w_md
+  endif
+
+  -%}
+<div class="product-recommendation section no-js-hidden" data-ui-component="Product Recommendations Section">
+  <sht-product-recommendations data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.max_item }}">
+    <div class="product-recommendation__container ctnr">
+      <h2 class="section__heading product-recommendation__heading{% if section.settings.heading == blank %} dpy-ne{% endif %} tt-aln-ctr">{{ section.settings.heading }}</h2>
+        <div class="product-recommendation__row products rw">
+          {% for product in recommendations.products %}
+            <div class="product__item clm" style="--wh-xs: 12;--wh-md: {{ w_md }};--wh-sm: {{ w_sm }};">
+              {% render 'card-product', product: product, is_first: forloop.first, item_per_row: section.settings.item_per_row %}
+            </div>
+          {% endfor %}
+        </div>
+    </div>
+  </sht-product-recommendations>
+</div>
+{%- liquid
+	assign files = "product-recommendations.js" | split: ', '
+  render 'js-loader', files: files, type: 'inline' 
+-%}
+{% schema %}
+{
+  "name": "t:sections.product_recommendation.name",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:general.content.label"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:general.heading.label",
+      "placeholder": "t:general.heading.placeholder",
+      "default": "Other Products"
+    },
+    {
+      "type": "range",
+      "id": "item_per_row",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "label": "t:general.item_per_row.label",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "max_item",
+      "min": 2,
+      "max": 36,
+      "step": 1,
+      "label": "t:general.max_products_to_show.label",
+      "default": 4
+    }
+  ]
+}
+{% endschema %}

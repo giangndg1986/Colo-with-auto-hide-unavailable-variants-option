@@ -1,0 +1,199 @@
+{%- liquid 
+  assign collection_title = 'sections.product_tabs.blocks.collection.title' | t
+
+  assign rand = "now" | date: "%N"
+  assign tab_aria_controls_prefix = "products-tabs-tabs-" | append: rand
+  assign tab_id = "products-tabs-tab-" | append: rand
+
+  assign w_sm = 6
+  assign w_md = 12 | divided_by: section.settings.max_item
+
+  if section.settings.max_item <= 2
+    assign w_sm = w_md
+  endif
+
+  assign tab_clone = ''
+  assign tab_clone_css = ''
+-%}
+<div class="section product-tabs" 
+style="
+--color-heading: {{ section.settings.heading_color.red }},{{ section.settings.heading_color.green }},{{ section.settings.heading_color.blue }};
+--color-text: {{ section.settings.text_color.red }}, {{ section.settings.text_color.green }}, {{ section.settings.text_color.blue }};
+background-color: {{ section.settings.background_color }};
+margin: {{ section.settings.container_margin | default: 'inherit' }}; padding: {{ section.settings.container_padding | default: 'inherit' }}" data-ui-component="Product Tabs Section">
+  <div class="product-tabs__container {% if section.settings.container_fluid == true %}ctnr-fld{% else %}ctnr{% endif %}">
+    <h2 class="section__heading product-tabs__heading{% if section.settings.heading == blank %} dpy-ne{% endif %} tt-aln-ctr">{{ section.settings.heading }}</h2>
+    <div class="product-tabs__wrapper">
+      <sht-tabs>
+        <ul class="tab lt-ste-ne tt-aln-ctr" role="tablist">
+          {% for block in section.blocks limit: section.blocks.size %}
+            {%- assign collection = collections[block.settings.collection] -%}
+            <li class="tab__item dpy-ile-blk pdg-tp-8 pdg-btm-8 pdg-rt-8 pdg-lt-8" role="presentation">
+              <a class="tab__link{% if forloop.first %} tab__link--active{% endif %} btn js-tab-link tt-upcs" role="tab" id="{{ tab_id }}-{{ forloop.index }}" href="#{{ tab_aria_controls_prefix }}-{{ forloop.index }}" aria-controls="{{ tab_aria_controls_prefix }}-{{ forloop.index }}" aria-selected="false">{{ collection.title | default: collection_title }}</a>
+            </li>
+            {% capture tab_clone %}
+              {{ tab_clone }}
+              <span id="{{ tab_aria_controls_prefix }}-{{ forloop.index }}" hidden></span>
+            {% endcapture %}
+
+            {% capture tab_clone_css %}
+              {{ tab_clone_css }}
+              #{{ tab_aria_controls_prefix }}-{{ forloop.index }}:target ~ .tab__panel--active {display:none}
+              #{{ tab_aria_controls_prefix }}-{{ forloop.index }}:target ~ .{{ tab_aria_controls_prefix }}-{{ forloop.index }} {
+                display: block !important;
+              }
+            {% endcapture %}
+          {%- endfor -%}
+        </ul>
+        <div class="tab__content">
+          {{ tab_clone }}
+          {% for block in section.blocks limit: section.blocks.size %}
+            {%- assign collection = collections[block.settings.collection] -%}
+            {%- assign products = collection.products -%}
+            <div class="tab__panel{% if forloop.first %} tab__panel--active dpy-blk{% else %} dpy-ne{% endif %} {{ block.type }} js-tab-panel {{ tab_aria_controls_prefix }}-{{ forloop.index }}" data-tab-content-id="{{ tab_aria_controls_prefix }}-{{ forloop.index }}" aria-labelledby="{{ tab_id }}-{{ forloop.index }}" role="tabpanel">
+              <div class="products rw">
+                {% for product in products limit: section.settings.max_item %}
+                  <div class="product__item clm" style="--wh-xs: 6;--wh-md: {{ w_md }};--wh-sm: {{ w_sm }};">
+                    {% render 'card-product', product: product, show_ratings: true, item_per_row: section.settings.max_item, is_first: forloop.first %}
+                  </div> 
+                {% else%}
+                  {% for i in (1..section.settings.max_item) %}
+                    <div class="product__item clm" style="--wh-xs: 6;--wh-md: {{ w_md }};--wh-sm: {{ w_sm }};">
+                      {% render 'card-product-placeholder' %}
+                    </div>
+                  {% endfor %}
+                {% endfor %}
+              </div>
+              {% if block.settings.show_view_all_button %}
+                <div class="{{ block.type }}__link tt-aln-ctr">
+                  <a href="{{ collection.url | default: "#" }}" class="button button--primary">
+                    {{ 'sections.product_tabs.blocks.view_all.title' | t }}
+                  </a>
+                </div>
+              {% endif %}
+            </div>
+          {%- endfor -%}
+        </div>
+      </sht-tabs>
+    </div>
+  </div>
+</div>
+<noscript>
+  <style>
+    {{ tab_clone_css }}
+  </style>
+</noscript>
+{%- liquid
+
+  assign files = "tabs.js" | split: ', '
+  render 'js-loader', files: files | split: ',', type: 'inline'
+-%}
+
+<link rel="stylesheet" href="{{ "tabs.css" | asset_url }}" media="print" onload="this.media='all'" />
+<noscript>
+  <link rel="stylesheet" href="{{ "tabs.css" | asset_url }}" media="all"/>   
+</noscript>
+{% schema %}
+{
+  "name": "t:sections.product_tabs.name",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:general.layout.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "container_fluid",
+      "label": "t:general.layout.enable_fluid_layout"
+    },
+    {
+      "type": "text",
+      "id": "container_margin",
+      "label": "t:general.margin.label",
+      "placeholder": "10px 20px 10px 20px",
+      "info": "t:general.margin.info"
+    },
+    {
+      "type": "text",
+      "id": "container_padding",
+      "label": "t:general.padding.label",
+      "placeholder": "10px 20px 10px 20px",
+      "default": "50px 0 30px",
+      "info": "t:general.padding.info"
+    },
+    {
+      "type": "header",
+      "content": "t:general.content.label"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:general.heading.label",
+      "placeholder": "t:general.heading.placeholder",
+      "default": "Product tabs"
+    },
+    {
+      "type": "range",
+      "id": "max_item",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "label": "t:general.max_products_to_show.label",
+      "default": 3
+    },
+    {
+      "type": "header",
+      "content": "t:general.color.content"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:general.background.label"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "t:general.heading.label"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:general.text.label"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "t:sections.product_tabs.blocks.collection.name",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "t:sections.product_tabs.blocks.collection.settings.collection.label"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_view_all_button",
+          "label": "t:sections.product_tabs.blocks.collection.settings.show_view_all_button.label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.product_tabs.name",
+      "blocks": [
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

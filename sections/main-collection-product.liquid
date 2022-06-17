@@ -1,0 +1,111 @@
+{%- liquid
+  assign w_sm = 6
+  assign w_md = 12 | divided_by: section.settings.item_per_row
+  if section.settings.item_per_row <= 2
+    assign w_sm = w_md
+  endif
+-%}
+<link rel="preload" href="{{ 'section-main-collection.css' | asset_url }}" as="style" />
+<link rel="stylesheet" href="{{ "section-main-collection.css" | asset_url }}" media="all" />
+<div class="main-collection-product ovfw-hdn pstn-rlte" data-ui-component="Main Collection Product Section">
+  <div class="main-collection-product__container ctnr">
+    <h1 class="main-collection-product__heading tt-aln-ctr">{{ collection.title | escape }}</h1> 
+    {% if collection.description != blank %}
+        <p class="main-collection-product__description tt-aln-ctr">{{ collection.description }}</p>
+    {% endif %}
+
+    {% if section.settings.enable_filtering %}
+      <aside class="filters-toolbar">
+        {% render 'main-collection-product-filter-form', results: collection, enable_filtering: section.settings.enable_filtering, enable_sorting: section.settings.enable_sorting %}
+      </aside>
+    {% endif %}
+
+    <div id="ProductGridContainer" class="main-collection-product__items js-product-grid" data-id="{{ section.id }}">
+      {% if collection.products.size == 0 %}
+        <div class="main-collection-products main-collection-product--empty js-product-grid" data-id="{{ section.id }}">
+          <div class="tt-aln-ctr">
+            <h2 class="">
+              {{ "sections.main_collection_product.filter_form.empty" | t }}<br />
+              {{ "sections.main_collection_product.filter_form.use_fewer_filters_html" | t: link: collection.url, class: "link" }}
+            </h2>
+          </div>
+        </div>
+      {% else %}
+        {% paginate collection.products by section.settings.item_per_page %}
+          <div class="main-collection-products products rw js-product-grid" data-id="{{ section.id }}">
+            {%- for product in collection.products -%}
+              <div class="product__item product__card clm" style="--wh-xs: 12;--wh-md: {{ w_md }};--wh-sm: {{ w_sm }};">
+                {%- render 'card-product', 
+                  product: product, 
+                  show_vendors: section.settings.show_vendors,
+                  show_ratings: section.settings.show_rating,
+                  is_first: forloop.first,
+                  item_per_row: section.settings.item_per_row,
+                  is_first: forloop.first
+                -%}
+              </div>
+            {%- endfor -%}
+          </div>
+          {% render 'pagination', paginate: paginate %}
+        {% endpaginate %} 
+      {% endif %}
+    </div>
+  </div>
+</div>
+{%- liquid
+	assign files = "main-collection-product-filter-form.js" | split: ', '
+  render 'js-loader', files: files, type: 'inline' 
+-%}  
+{% schema %}
+{
+  "name": "t:sections.main_collection_product.name",
+  "class": "main-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:general.layout.label"
+    },
+    {
+      "type": "range",
+      "id": "item_per_page",
+      "min": 3,
+      "max": 48,
+      "step": 1,
+      "label": "t:general.item_per_page.label",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "item_per_row",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "label": "t:general.item_per_row.label",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "t:general.content.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_filtering",
+      "label": "t:sections.main_collection_product.settings.enable_filtering.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendors",
+      "label": "t:sections.main_collection_product.settings.show_vendors.label",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "default": false,
+      "label": "t:sections.main_collection_product.settings.show_rating.label",
+      "info": "t:sections.main_collection_product.settings.show_rating.info"
+    }
+  ]
+}
+{% endschema %}

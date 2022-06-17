@@ -1,0 +1,57 @@
+{%- liquid
+  assign w_sm = 6
+  assign w_md = 12 | divided_by: section.settings.item_per_row
+
+  if section.settings.item_per_row <= 2
+    assign w_sm = w_md
+  endif
+
+-%}
+<div class="main-list-collections ovfw-hdn pstn-rlte" data-ui-component="Main List Collections Section">
+  <div class="main-list-collections__container ctnr{% if section.settings.container_fluid == true %} ctnr-fld{% endif %}">
+    <h2 class="main-list-collections__heading{% if section.settings.heading == blank %} dpy-ne{% endif %} tt-aln-ctr">{{ section.settings.heading }}</h2>
+    <div class="main-list-collections__row collections rw">
+      {%- for collection in collections -%}
+        <div class="collection__item clm" style="--wh-xs: 12;--wh-md: {{ w_md }};--wh-sm: {{ w_sm }};">
+          {%- render 'card-collection', collection: collection, item_per_row: section.settings.item_per_row, is_first: forloop.first -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "t:sections.main_list_collections.name",
+  "class": "main-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:general.layout.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "container_fluid",
+      "label": "t:general.layout.enable_fluid_layout"
+    },
+    {
+      "type": "header",
+      "content": "t:general.content.label"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:general.heading.label",
+      "default": "All collections"
+    },
+    {
+      "type": "range",
+      "id": "item_per_row",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "label": "t:general.item_per_row.label",
+      "default": 4
+    }
+  ]
+}
+{% endschema %}
