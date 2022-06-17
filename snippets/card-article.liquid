@@ -1,0 +1,54 @@
+{% comment %}
+Usage:
+{% render 'card-article', 
+          article: article, 
+          show_image: true, 
+          show_author: true, 
+          show_date: true, 
+          show_excerpt: true %}
+{% endcomment %}
+{%- liquid
+
+  assign image_width = '150, 320, 550, 750, 950, 1100, 1600'
+  assign sizes = "(min-width: 1200px) calc(100vw/ITEM_PER_ROW), (min-width: 1025px) calc(100vw/ITEM_PER_ROW), (min-width: 769px) calc(100vw/ITEM_PER_ROW), calc(100vw/2)" | replace: "ITEM_PER_ROW", item_per_row
+  assign article_placeholder = 'image' | placeholder_svg_tag: 'placeholder--svg wh-100pct ht-100pct ojt-ft-cvr pstn-asle'
+  assign article_image = article_placeholder
+  assign article_image = article.image.src | image_url: width: article.image.width | image_tag: widths: image_width, sizes: sizes, placeholder: "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==", alt: article.title, class: 'js-lazy-loading-image-item wh-100pct ht-100pct ojt-ft-cvr ojt-pstn-tp pstn-tp pstn-lt pstn-asle'
+-%}
+<article class="article">
+    <div class="card-wrapper">
+      <div class="card card-article">
+        <div class="card__media mgn-btm-20 media--hover-effect pstn-rlte ovfw-hdn" style="--ratio: 50%;">
+          {%- if show_image -%}
+            <a href="{{ article.url }}" class="dpy-blk wh-100pct ht-100pct" aria-label="{{ article.title | escape }}">
+              {% render 'lazy-loading-image', image_item: article_image, lazy_image_loading_image_css: "no-js-hidden dpy-blk wh-100pct ht-100pct", lazy_image_loading_spinner_css: "js-lazy-loading-image-spinner aln-ctr-mde ptr-ne pstn-asle", replace_srcset: true, is_first: is_first %}             
+            </a>
+          {%- endif -%}
+        </div>
+        <div class="card__content">
+          <div class="card__info">
+            <h3 class="card__heading mgn-btm-4 article__info__title mgn-0 hdg-4">
+              <a href="{{ article.url }}" class="link--hover">{{ article.title | escape }}</a>
+            </h3>
+            <div class="article__sub-info">
+              {% if show_author %}
+                <span class="article__author circle-divider">
+                  {{ 'search.article.by_author' | t: author: article.author }}
+                </span>
+              {% endif %}
+              {% if show_date %}
+                <span class="article__published_at">
+                  {{ article.published_at | time_tag: format: 'date' }}
+                </span>
+              {% endif %}  
+              </div>
+              {%- if article.excerpt_or_content.size > 0 -%}
+                <div class="article__excerpt ">
+                  {{ article.excerpt_or_content | strip_html | truncatewords: 30 }}
+                </div>
+              {%- endif -%}
+          </div>
+        </div>
+      </div>
+    </div> 
+</article>
