@@ -1,0 +1,83 @@
+<!-- /templates/customers/account.liquid -->
+<div class="page ">
+	<div class="ctnr ctnr--small">
+		<div class="rw">
+			<div class="clm">
+				<div class="page__header">
+					<div class="head__title center-xs">
+						<h1 class="section-header__title">{{ 'customer.account.title' | t }}</h1>
+						<span> <a href="/account/logout">{{ 'customer.log_out' | t }}</a></span>
+					</div>
+			</div>
+			<div>
+				<div>
+					<h3>{{ 'customer.orders.title' | t }}</h3>
+					{% paginate customer.orders by 20 %}
+						{% if customer.orders.size != 0 %}
+							<div class="table-wrap tt-aln-lt">
+									<table class="wh-100pct">
+											<thead>
+											<tr>
+													<th>{{ 'customer.orders.order_number' | t }}</th>
+													<th>{{ 'customer.orders.date' | t }}</th>
+													<th>{{ 'customer.orders.payment_status' | t }}</th>
+													<th>{{ 'customer.orders.fulfillment_status' | t }}</th>
+													<th>{{ 'customer.orders.total' | t }}</th>
+											</tr>
+											</thead>
+											<tbody>
+											{% for order in customer.orders %}
+													<tr>
+															<td>{{ order.name | link_to: order.customer_url }}</td>
+															<td>{{ order.created_at | time_tag: format: 'date' }}</td>
+															<td>{{ order.financial_status_label }}</td>
+															<td>{{ order.fulfillment_status_label }}</td>
+															<td>{{ order.total_price | money }}</td>
+													</tr>
+											{% endfor %}
+											</tbody>
+									</table>
+							</div>
+						{% else %}
+							<p>{{ 'customer.orders.none' | t }}</p>
+						{% endif %}
+						{% if paginate.pages > 1 %}
+							<hr>
+							<div class="pagination">
+									{{ paginate | default_pagination | replace: '&laquo; Previous', '&larr;' | replace: 'Next &raquo;', '&rarr;' }}
+							</div>
+						{% endif %}
+					{% endpaginate %}
+				</div>
+				<div>
+					<h3>{{ customer.name }}</h3>
+					{% if customer.default_address != nil %}
+						<p>
+							{{ customer.default_address.address1 }}<br>
+							{% if customer.default_address.address2 != "" %}
+									{{ customer.default_address.address2 }}<br>
+							{% endif %}
+							{% if customer.default_address.city != "" %}
+									{{ customer.default_address.city }}<br>
+							{% endif %}
+							{% if customer.default_address.province_code != "" %}
+									{{ customer.default_address.province_code | upcase }}<br>
+							{% endif %}
+							{% if customer.default_address.zip != "" %}
+									{{ customer.default_address.zip | upcase }}<br>
+							{% endif %}
+							{% if customer.default_address.country != "" %}
+									{{ customer.default_address.country }}<br>
+							{% endif %}
+							{% if customer.default_address.phone != "" %}
+									{{ customer.default_address.phone }}
+							{% endif %}
+						</p>
+					{% endif %}
+					<p><a href="/account/addresses">{{ 'customer.account.view_addresses' | t }} ({{ customer.addresses_count }})</a></p>
+				</div>
+			</div>
+			</div>
+		</div>
+	</div>
+</div>

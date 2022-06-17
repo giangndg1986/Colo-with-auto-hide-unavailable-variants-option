@@ -1,0 +1,60 @@
+
+<link rel="stylesheet" href="{{ "customer.css" | asset_url }}" media="all" />
+<div class="page main-section">
+	<div class="ctnr ctnr--small">
+		<div class="note form-success" id="ResetSuccess" style="display:none;">
+			{{ 'customer.recover_password.success' | t }}
+		</div>
+		<div id="recover" hidden class="tt-aln-ctr">
+			<div class="head">
+				<h1 class="section-header__title">{{ 'customer.recover_password.title' | t }}</h1>
+				<p>{{ 'customer.recover_password.subtext' | t }}</p>
+			</div>
+			{% form 'recover_customer_password', class: 'recover-form dpy-flx jtfy-ctt-ctr flx-drtn-cln' %}
+				{%- if form.errors -%}
+					<p id="RecoverEmail-email-error" class="form__message dpy-flx aln-its-ctr">
+						{%- render 'icon-errors', class: 'icon-errors' %}
+						{{ form.errors.messages['form'] }}
+					</p>
+				{%- endif -%}
+				<input type="email" value="" name="email" id="RecoverEmail" class="field__input mgn-btm-16" placeholder="{{ 'customer.login_page.email' | t }}" autocorrect="off" autocapitalize="off" required>
+				<input type="submit" class="button button--primary button--large" value="{{ 'customer.login_page.submit' | t }}">
+				<a href="#login">
+					{{ 'customer.login_page.cancel' | t }}
+				</a>
+			{% endform %}
+		</div>
+		<div id="login" hidden class="tt-aln-ctr">
+			<div class="head">
+				<h1 class="section-header__title">{{ 'customer.login_page.title' | t }}</h1>
+			</div>
+			{% form 'customer_login', class: 'login-form dpy-flx jtfy-ctt-ctr flx-drtn-cln' %}
+				{%- if form.errors -%}
+					<p id="RecoverEmail-email-error" class="form__message dpy-flx aln-its-ctr">
+						{% render 'icon-errors', class: 'icon-errors' %}
+						{{ form.errors.messages['form'] }}
+					</p>
+				{%- endif -%}
+					<input type="email" name="customer[email]" id="CustomerEmail" class="field__input {% if form.errors contains 'email' %} error{% endif %} mgn-btm-16" placeholder="{{ 'customer.login_page.email' | t }}" autocorrect="off" autocapitalize="off" autofocus required>
+				{% if form.password_needed %}
+						<input type="password" value="" name="customer[password]" id="CustomerPassword" class="field__input {% if form.errors contains 'password' %} error{% endif %} mgn-btm-16" placeholder="{{ 'customer.login_page.password' | t }}">
+				{% endif %}
+					<input type="submit" class="button button--primary button--large  mgn-btm-16" value="{{ 'customer.login_page.sign_in' | t }}">
+					<div>
+						<a href="/">{{ 'customer.login_page.cancel' | t }}</a>
+						{{ 'customer.login_page.create_account' | t | customer_register_link }}
+						{% if form.password_needed %}
+							<a href="#recover" id="RecoverPassword">{{ 'customer.login_page.forgot_password' | t }}</a>
+						{% endif %}
+					</div>
+			{% endform %}
+		</div>
+
+		{% if shop.checkout.guest_login %}
+			<h2>{{ 'customer.login_page.guest_title' | t }}</h2>
+			{% form 'guest_login' %}
+				<input type="submit" class="button button--primary button-large" value="{{ 'customer.login_page.guest_continue' | t }}">
+			{% endform %}
+		{% endif %}
+	</div>
+</div>

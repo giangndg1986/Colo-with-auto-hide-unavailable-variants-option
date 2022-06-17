@@ -1,0 +1,356 @@
+{
+  "sections": {
+    "slideshow": {
+      "type": "slideshow",
+      "blocks": {
+        "slideshow-0": {
+          "type": "slide",
+          "settings": {
+            "heading": "A TOUCH OF GRACE",
+            "heading_color": "#222222",
+            "heading_font_size": 48,
+            "description": "<p>With our years of experience, we worked to develop the most usable and versatile theme yet.</p>",
+            "description_color": "#222222",
+            "description_font_size": 16,
+            "btn": "Get your Access",
+            "link": ""
+          }
+        },
+        "slideshow-1": {
+          "type": "slide",
+          "settings": {
+            "heading": "A TOUCH OF GRACE",
+            "heading_color": "#222222",
+            "heading_font_size": 48,
+            "description": "<p>Description Lorem ipsum dolor sit amet, consectetur adipiscing elit seddo.</p>",
+            "description_color": "#222222",
+            "description_font_size": 16,
+            "btn": "Get your Access",
+            "link": ""
+          }
+        }
+      },
+      "block_order": ["slideshow-0", "slideshow-1"],
+      "settings": {
+        "container_fluid": true,
+        "container_margin": "",
+        "container_padding": "",
+        "height": "50",
+        "info_position": "jtfy-ctt-ctr aln-its-ctr tt-aln-ctr",
+        "auto_play": true,
+        "slide_timing": 5
+      }
+    },
+    "featured-collection": {
+      "type": "featured-collection",
+      "settings": {
+        "container_fluid": false,
+        "container_margin": "",
+        "container_padding": "50px 0 30px",
+        "heading": "Feature Collection",
+        "sub_heading": "",
+        "collection": "",
+        "item_per_row": 4,
+        "max_item": 4,
+        "show_view_all_button": false,
+        "background_color": "",
+        "heading_color": "",
+        "text_color": "",
+        "link_color": ""
+      }
+    },
+    "product-tabs": {
+      "type": "product-tabs",
+      "blocks": {
+        "collection-0": {
+          "type": "collection",
+          "settings": {
+            "collection": "",
+            "show_view_all_button": false
+          }
+        },
+        "collection-1": {
+          "type": "collection",
+          "settings": {
+            "collection": "",
+            "show_view_all_button": false
+          }
+        },
+        "collection-2": {
+          "type": "collection",
+          "settings": {
+            "collection": "",
+            "show_view_all_button": false
+          }
+        }
+      },
+      "block_order": ["collection-0", "collection-1", "collection-2"],
+      "settings": {
+        "container_fluid": false,
+        "container_margin": "",
+        "container_padding": "50px 0 30px",
+        "heading": "Product tabs",
+        "max_item": 3,
+        "background_color": "",
+        "heading_color": "",
+        "text_color": ""
+      }
+    },
+    "custom-content": {
+      "type": "custom-content",
+      "blocks": {
+        "custom-content-0": {
+          "type": "text",
+          "settings": {
+            "title": "Talk about your brand",
+            "text": "<p>Use this text to share information about your brand with your customers. Describe a product, share announcements, or welcome customers to your store.</p>"
+          }
+        },
+        "custom-content-1": {
+          "type": "image",
+          "settings": {
+            "image_link": ""
+          }
+        }
+      },
+      "block_order": ["custom-content-0", "custom-content-1"],
+      "settings": {
+        "container_fluid": false,
+        "container_margin": "",
+        "container_padding": "50px 0 30px",
+        "heading": "Custom Content",
+        "background_color": "",
+        "item_per_row": 2,
+        "heading_color": "",
+        "text_color": "",
+        "link_color": ""
+      }
+    },
+    "masonry-content": {
+      "type": "masonry-content",
+      "blocks": {
+        "masonry-content-0": {
+          "type": "image",
+          "settings": {
+            "image_link": "",
+            "effect": "image--hover-none",
+            "block_heading": "",
+            "block_content": "",
+            "heading_color": "#000000",
+            "content_color": "#000000",
+            "info_position": "aln-ctr-mde tt-aln-ctr",
+            "block_width": 3,
+            "block_height": 2
+          }
+        },
+        "masonry-content-1": {
+          "type": "image",
+          "settings": {
+            "image_link": "",
+            "effect": "image--hover-none",
+            "block_heading": "",
+            "block_content": "",
+            "heading_color": "#000000",
+            "content_color": "#000000",
+            "info_position": "aln-ctr-mde tt-aln-ctr",
+            "block_width": 2,
+            "block_height": 2
+          }
+        },
+        "masonry-content-2": {
+          "type": "image",
+          "settings": {
+            "image_link": "",
+            "effect": "image--hover-none",
+            "block_heading": "",
+            "block_content": "",
+            "heading_color": "#000000",
+            "content_color": "#000000",
+            "info_position": "aln-ctr-mde tt-aln-ctr",
+            "block_width": 1,
+            "block_height": 3
+          }
+        },
+        "masonry-content-3": {
+          "type": "image",
+          "settings": {
+            "image_link": "",
+            "effect": "image--hover-none",
+            "block_heading": "",
+            "block_content": "",
+            "heading_color": "#000000",
+            "content_color": "#000000",
+            "info_position": "aln-ctr-mde tt-aln-ctr",
+            "block_width": 2,
+            "block_height": 2
+          }
+        },
+        "masonry-content-4": {
+          "type": "image",
+          "settings": {
+            "image_link": "",
+            "effect": "image--hover-none",
+            "block_heading": "",
+            "block_content": "",
+            "heading_color": "#000000",
+            "content_color": "#000000",
+            "info_position": "aln-ctr-mde tt-aln-ctr",
+            "block_width": 2,
+            "block_height": 2
+          }
+        },
+        "masonry-content-5": {
+          "type": "image",
+          "settings": {
+            "image_link": "",
+            "effect": "image--hover-none",
+            "block_heading": "",
+            "block_content": "",
+            "heading_color": "#000000",
+            "content_color": "#000000",
+            "info_position": "aln-ctr-mde tt-aln-ctr",
+            "block_width": 1,
+            "block_height": 2
+          }
+        },
+        "masonry-content-6": {
+          "type": "image",
+          "settings": {
+            "image_link": "",
+            "effect": "image--hover-none",
+            "block_heading": "",
+            "block_content": "",
+            "heading_color": "#000000",
+            "content_color": "#000000",
+            "info_position": "aln-ctr-mde tt-aln-ctr",
+            "block_width": 1,
+            "block_height": 1
+          }
+        }
+      },
+      "block_order": [
+        "masonry-content-0",
+        "masonry-content-1",
+        "masonry-content-2",
+        "masonry-content-3",
+        "masonry-content-4",
+        "masonry-content-5",
+        "masonry-content-6"
+      ],
+      "settings": {
+        "container_fluid": false,
+        "container_margin": "",
+        "container_padding": "50px 0 30px",
+        "heading": "Masonry Content",
+        "max_columns": 6,
+        "max_gutters": 10,
+        "background_color": "",
+        "heading_color": ""
+      }
+    },
+    "content-list-with-icon": {
+      "type": "content-list-with-icon",
+      "blocks": {
+        "content-list-with-icon-0": {
+          "type": "item",
+          "settings": {
+            "icon": "eye",
+            "icon_style": "",
+            "heading": "Block Heading",
+            "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua, ut enim ad minim.</p>"
+          }
+        },
+        "content-list-with-icon-1": {
+          "type": "item",
+          "settings": {
+            "icon": "check-mark",
+            "icon_style": "",
+            "heading": "Block Heading",
+            "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua, ut enim ad minim.</p>"
+          }
+        },
+        "content-list-with-icon-2": {
+          "type": "item",
+          "settings": {
+            "icon": "calendar",
+            "icon_style": "",
+            "heading": "Block Heading",
+            "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua, ut enim ad minim.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "content-list-with-icon-0",
+        "content-list-with-icon-1",
+        "content-list-with-icon-2"
+      ],
+      "settings": {
+        "container_fluid": false,
+        "container_margin": "",
+        "container_padding": "50px 0 30px",
+        "heading": "Content list with icon",
+        "sub_heading": "",
+        "item_per_row": 3,
+        "content_alignment": "center",
+        "icon_size": "icon--large",
+        "background_color": "",
+        "heading_color": "",
+        "text_color": "",
+        "icon_color": "",
+        "icon_background": ""
+      }
+    },
+    "content-list-with-image": {
+      "type": "content-list-with-image",
+      "blocks": {
+        "content-list-with-image-0": {
+          "type": "item",
+          "settings": {
+            "heading": "Block Heading",
+            "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>"
+          }
+        },
+        "content-list-with-image-1": {
+          "type": "item",
+          "settings": {
+            "heading": "Block Heading",
+            "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>"
+          }
+        },
+        "content-list-with-image-2": {
+          "type": "item",
+          "settings": {
+            "heading": "Block Heading",
+            "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "content-list-with-image-0",
+        "content-list-with-image-1",
+        "content-list-with-image-2"
+      ],
+      "settings": {
+        "container_fluid": false,
+        "container_margin": "",
+        "container_padding": "50px 0 30px",
+        "heading": "Content list with image",
+        "sub_heading": "",
+        "item_per_row": 3,
+        "column_alignment": "tt-aln-ctr",
+        "background_color": "",
+        "heading_color": "",
+        "text_color": ""
+      }
+    }
+  },
+  "order": [
+    "slideshow",
+    "featured-collection",
+    "product-tabs",
+    "custom-content",
+    "masonry-content",
+    "content-list-with-icon",
+    "content-list-with-image"
+  ]
+}
