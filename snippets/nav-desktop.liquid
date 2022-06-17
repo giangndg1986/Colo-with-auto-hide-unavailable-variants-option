@@ -1,0 +1,29 @@
+<ul class="main-nav {{ nav_alignment }} dpy-flx flx-wp lt-ste-ne " id="AccessibleNav">
+	{% for link in linklists[section.settings.main_linklist].links %}
+		{% liquid
+			assign child_list_handle = link.title | handleize
+		%}
+		<li class="nav__item dpy-ile-blk{% if link.active %} nav__item--active{% endif %}">
+		{% if linklists[child_list_handle].links != blank %}
+			<details class="pstn-rlte">
+				<summary class="nav__link dpy-blk tt-upcs">
+					<span class="nav__link__title">
+						{{- link.title -}}	
+					</span>
+					{%- render 'icon-caret', width: '8px' -%}
+				</summary>
+				<ul class="nav__dropdown nav__dropdown--header pstn-asle lt-ste-ne">
+					{% for childlink in linklists[child_list_handle].links %}
+						<li>
+							<a href="{{ childlink.url }}"
+								class="sub-nav__link dpy-blk">{{- childlink.title | escape -}}</a>
+						</li>
+					{% endfor %}
+				</ul>
+			</details>
+		{% else %}
+				<a href="{{ link.url }}" class="nav__link dpy-blk tt-upcs"><span class="nav__link__title">{{- link.title -}}</span></a>
+		{% endif %}
+		</li>	
+	{% endfor %}
+</ul>

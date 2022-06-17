@@ -1,0 +1,10 @@
+<div class="search-bar js-search-bar pstn-rlte" id="search-bar" style="display: none;">
+  <form action="/search" method="get" class="search-bar__form dpy-flx" role="search">
+		<input type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'search.placeholder' | t }}" class="field__input wh-100pct">
+		<input type="hidden" name="options[prefix]" value="last" />
+		<button type="submit" class="button button--primary">
+			{% render 'icon-search' %}
+		</button>
+	</form>
+	<a class="search-bar__close-btn js-search-bar-close-btn dpy-flx pstn-asle " href="#">{% render 'icon-close' %}</a>
+</div>

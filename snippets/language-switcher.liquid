@@ -1,0 +1,62 @@
+{% liquid
+	assign language_switcher_no_script = ''
+  assign rand = "now" | date: "%N"
+	assign form_id = "LanguageSwitcher-" | append: rand
+  capture check_mark 
+    render 'icon-check-mark', width: '15', height: '15' 
+  endcapture 
+%}
+
+<sht-language-switcher>
+	{%- form 'localization', id: form_id, class: 'language-switcher__form js-language-switcher-form' -%}
+		<div class="language-switcher__container no-js-hidden">
+			<h2 class="language-switcher__heading visually-hidden" id="LanguageSwitcherLabel-{{ rand }}">{{ 'localization.language_label' | t }}</h2>
+			<div class="language-switcher__wrapper pstn-rlte">
+				<button type="button" class="language-switcher__button js-language-switcher-button button button--outline" aria-expanded="false" aria-controls="LanguageSwitcherLanguageList-{{ rand }}" aria-describedby="LanguageSwitcherLabel-{{ rand }}">
+					{{ localization.language.endonym_name | capitalize }}
+					{% render 'icon-caret' %}
+				</button>
+				<ul role="list" id="LanguageSwitcherLanguageList-{{ rand }}" class="language-switcher__language-list js-language-switcher-language-list lt-ste-ne ovfw-hdn wh-100pct pstn-asle zidx-1" hidden="true">
+					{%- for language in localization.available_languages -%}
+						{% liquid
+							assign is_active = ''
+							assign active_class = ''
+							assign active_attrs = ''
+							assign active_icon = ''
+							if language.iso_code == localization.language.iso_code
+									assign is_active = ' selected' 
+									assign active_class = 'link--active fwt-bd' 
+									assign active_attrs = 'aria-current="true"'
+									assign active_icon = check_mark
+							endif 
+						%}
+						<li class="language-switcher__language-item" tabindex="-1">
+							<a class="language-switcher__language-item__link js-language-switcher-language-item-link link {{ active_class }}" href="#" {{ active_attrs }} data-value="{{ language.iso_code }}">
+							{{ language.endonym_name | capitalize }}
+							{{ active_icon }}
+							</a>
+						</li>
+						{% capture language_switcher_no_script %}
+						{{ language_switcher_no_script }}
+							<option value="{{ language.iso_code }}" lang="{{ language.iso_code }}" {{ is_active }}>
+								{{ language.endonym_name | capitalize }}
+							</option>
+						{% endcapture %}					
+					{%- endfor -%}
+				</ul>
+			</div>
+			<input type="hidden" class="js-language-switcher-language-code-field" name="locale_code" value="{{ localization.language.iso_code }}">
+		</div>
+		<noscript>
+			<div class="language-switcher__container">
+			<h2 class="language-switcher__heading visually-hidden" id="LanguageSwitcherLabel-{{ rand }}">{{ 'localization.language_label' | t }}</h2>
+				<select class="localization-form__select" name="locale_code" aria-labelledby="LanguageSwitcherLabel-{{ rand }}">
+					{{ language_switcher_no_script }}
+				</select>
+			</div>
+			<button class="button button--primary button--small jtfy-ctt-ctr tt-aln-ctr wh-100pct mgn-tp-4">{{ 'localization.update_language' | t }}</button>
+		</noscript>		
+	{%- endform -%}
+</sht-language-switcher>
+{%- assign files = "language-switcher.js" | split: ', ' -%}
+{%- render 'js-loader', files: files, type: 'inline' -%} 

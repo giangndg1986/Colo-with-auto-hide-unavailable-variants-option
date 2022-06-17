@@ -1,0 +1,41 @@
+{%-liquid 
+  assign loaded_item = ''
+  assign slide_image = place_holder
+  assign slide_image = media | image_url: width: 95 | image_tag: placeholder: "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==", alt: media.alt, title: media.alt, role: 'img', class: 'product__thumbnail__img js-lazy-loading-image-item wh-100pct ht-100pct ojt-ft-ctn zidx-n-1 pstn-asle'
+  assign slide_image_noscript = slide_image
+
+  if is_first_media
+    assign loaded_item = 'loaded="true"'
+    assign slide_image = slide_image | replace: 'wh-100pct ht-100pct', 'product__thumbnail__img wh-100pct ht-100pct slideshow__item__image-item--first slideshow__item__image-item--loaded pstn-asle'
+    assign slide_image_noscript = slide_image
+  else
+    assign slide_image = slide_image | replace: "srcset=", "data-srcset=" | replace: "src=", "data-src=" | replace: "placeholder=", "src=" | replace: 'class="', 'class="no-js-hidden '
+  endif
+ -%}
+
+ <li class="product-thumb product-thumb--{{ media.media_type }} product-media-slideshow-thumb__item js-product-media-slideshow-thumb-item ht-100pct dpy-flx pstn-rlte{% if is_first_media %} is-active{% endif %}" id="{{ section.id }}-{{ media.id }}">
+    <div class="slideshow__item__image js-slideshow-image zidx-1 wh-100pct ht-100pct pstn-rlte" style="--ratio: 100%;">
+    <button class="slideshow__item__link js-slideshow-button button button__product__thumbnail" data-target="{{ section.id }}-{{ media.id }}">
+      <noscript>
+        {{ slide_image_noscript }}
+      </noscript>
+      <sht-product-media-slideshow-thumb-lazy-loading-image class="no-js-hidden dpy-blk wh-100pct ht-100pct" {{- loaded_item -}}>
+        {{ slide_image }}  
+        <div class="js-lazy-loading-image-spinner pstn-asle ptr-ne">
+          <svg class="spinner" viewBox="25 25 50 50">
+            <circle class="spinner__path" cx="50" cy="50" r="20" fill="none" stroke="#02020E" stroke-width="2" />
+          </svg>
+        </div>
+      </sht-product-media-slideshow-thumb-lazy-loading-image>
+      {%- if media.media_type == 'model' -%}
+        <span class="thumbnail__badge dpy-flx jtfy-ctt-ctr aln-its-ctr" aria-hidden="true">
+          {%- render 'icon-3d-model', width: 12, height: 12 -%}
+        </span>
+      {%- elsif media.media_type == 'video' or media.media_type == 'external_video' -%}
+        <span class="thumbnail__badge dpy-flx jtfy-ctt-ctr aln-its-ctr" aria-hidden="true">
+          {%- render 'icon-play', width: 12, height: 12 -%}
+        </span>
+      {%- endif -%}
+      </button>
+    </div>
+ </li>

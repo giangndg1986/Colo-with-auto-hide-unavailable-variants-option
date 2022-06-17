@@ -1,0 +1,198 @@
+{%- liquid
+  assign sort_by = results.sort_by | default: results.default_sort_by
+  assign total_active_values = 0
+  if results.url
+    assign results_url = results.url
+  else 
+    assign terms = results.terms | escape
+    assign results_url = '?q=' | append: terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: sort_by
+  endif
+-%}
+
+<sht-main-collection-product-filter-form class="main-collection-product-filter">
+  <form id="MainCollectionProductFiltersForm" class="grd mgn-btm-32 aln-its-ctr main-collection-product-filter__form filter-form" style="--grd-gp: 1rem; --grid-template-rows: none;">
+    {%- if results.terms -%}
+      <input type="hidden" name="q" value="{{ results.terms | escape }}">
+      <input name="options[prefix]" type="hidden" value="last">
+    {%- endif -%}
+    {%- if enable_filtering -%}
+      <div class="filter-form-wrapper dpy-flx v-flx-drtn">
+        {%- unless results.filters == empty -%}
+        <span class="main-collection-product-filter__heading v-mgn-ile-ed" style="--v-mgn-ile-ed: calc(var(--gutter-base) * 2);">{{ 'sections.main_collection_product.filter_form.filter_by_label' | t }}</span>
+      {%- endunless -%}
+        {%- for filter in results.filters -%}
+          {%- assign total_active_values = total_active_values | plus: filter.active_values.size -%}
+          {% case filter.type %}
+            {% when 'boolean' or 'list' %}  
+              <details class="filter-form__details v-mgn-ile-ed js-details-filter pstn-rlte" style="--v-mgn-ile-ed: calc(var(--gutter-base) * 2);" data-index="{{ forloop.index }}">
+                <summary class="filter-form__summary dpy-flx aln-its-ctr">
+                  <span>{{ filter.label | escape }}</span>
+                  {% render 'icon-caret', width: 10, height: 10, class: "mgn-ile-stt-8" %}
+                </summary>  
+                <div class="filter-form__display">
+                  <div class="filter-form__header jtfy-ctt-spe-bwn aln-its-ctr dpy-flx pdg-8 v-bdr-btm">
+                    <span class="filter-form__selected">{{ 'sections.main_collection_product.filter_form.filters_selected' | t: count: filter.active_values.size }}</span>
+                    <sht-main-collection-product-filter-form-reset>
+                      <a href="{{ filter.url_to_remove }}" class="filter-form__reset-btn js-reset-form-btn button button--outline">
+                        {{ 'sections.main_collection_product.filter_form.reset' | t }}
+                      </a>
+                    </sht-main-collection-product-filter-form-reset>
+                  </div>
+                  <ul class="filter-form__list pdg-8 lt-ste-ne" role="list">
+                    {%- for value in filter.values -%}
+                      <li class="list-menu__item mgn-btm-8 facets__item {% if value.count == 0 and value.active == false %} facet--disabled opcy-50pct{% endif %} pstn-rlte">
+                        <input type="checkbox"
+                            name="{{ value.param_name }}"
+                            value="{{ value.value }}"
+                            class="filter-form__checkbox opcy-z"
+                            id="Filter-{{ filter.label | escape }}-{{ forloop.index }}"
+                            {% if value.active %}checked{% endif %}
+                            {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                          >
+                        {% render 'icon-checkmark', class: 'icon-check-mark pstn-asle vsblty-hdn pstn-lt-4', width: 10 %}
+                        <label for="Filter-{{ filter.label | escape }}-{{ forloop.index }}" class="facet-checkbox">
+                          {{ value.label | escape }} ({{ value.count }})
+                        </label>
+                      </li>
+                    {%- endfor -%}
+                  </ul>              
+                </div>
+              </details>
+            {% when 'price_range' %}
+              {% liquid
+                assign currencies_using_comma_decimals = 'ANG,ARS,BRL,BYN,BYR,CLF,CLP,COP,CRC,CZK,DKK,EUR,HRK,HUF,IDR,ISK,MZN,NOK,PLN,RON,RUB,SEK,TRY,UYU,VES,VND' | split: ','
+                assign uses_comma_decimals = false
+                if currencies_using_comma_decimals contains cart.currency.iso_code
+                  assign uses_comma_decimals = true
+                endif
+              %}
+              <details class="filter-form__details v-mgn-ile-ed js-details-filter pstn-rlte" style="--v-mgn-ile-ed: calc(var(--gutter-base) * 2)" data-index="{{ forloop.index }}">
+                <summary class="filter-form__summary dpy-flx aln-its-ctr">
+                  <span>{{ filter.label | escape }}</span>
+                  {% render 'icon-caret', width: 10, height: 10, class: "mgn-ile-stt-8" %}
+                </summary>
+                <div class="filter-form__display">
+                  <div class="filter-form__header aln-its-ctr dpy-flx jtfy-ctt-spe-bwn pdg-8 v-bdr-btm">
+                    {%- assign max_price_amount = filter.range_max | money | strip_html | escape -%}
+                    <span class="filter-form__selected">{{ "sections.main_collection_product.filter_form.max_price" | t: price: max_price_amount }}</span>
+                    <sht-main-collection-product-filter-form-reset>
+                      <a href="{{ filter.url_to_remove }}" class="filter-form__reset-btn js-reset-form-btn button button--outline" >
+                        {{ 'sections.main_collection_product.filter_form.reset' | t }}
+                      </a>
+                    </sht-main-collection-product-filter-form-reset>
+                  </div>
+                  <sht-main-collection-product-filter-form-range class="filter-form__price pdg-8 dpy-flx aln-its-ctr">
+                    <span class="field-currency mgn-rt-4">{{ cart.currency.symbol }}</span>
+                    <div class="field wh-100pct dpy-flx aln-its-ctr pdg-lt-8 pdg-rt-8 v-bdr">
+                      <label class="field__label" for="Filter-{{ filter.label | escape }}-GTE">{{ 'sections.main_collection_product.filter_form.from' | t }}</label>
+                      <input class="wh-100pct field__input bdr-ne js-filter-price js-price-gte"
+                        name="{{ filter.min_value.param_name }}"
+                        id="Filter-{{ filter.label | escape }}-GTE"
+                        {%- if filter.min_value.value -%}
+                          {%- if uses_comma_decimals -%}value="{{ filter.min_value.value | money_without_currency | replace: '.', '' | replace: ',', '.' }}"{%- else -%}value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}"{% endif %}
+                        {%- endif -%}
+                        type="number"
+                        placeholder="0"
+                        min="0"
+                        {%- if uses_comma_decimals -%}max="{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' }}"{%- else -%}max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"{% endif %}
+                      >
+                      </input>
+                      
+                    </div>
+                    <span class="field-currency mgn-lt-16 mgn-rt-4">{{ cart.currency.symbol }}</span>
+                    <div class="field wh-100pct dpy-flx aln-its-ctr pdg-lt-8 pdg-rt-8 v-bdr">
+                      <label class="field__label" for="Filter-{{ filter.label | escape }}-LTE">{{ 'sections.main_collection_product.filter_form.to' | t }}</label>
+                      <input class="wh-100pct field__input bdr-ne js-filter-price js-price-lte"
+                        name="{{ filter.max_value.param_name }}"
+                        id="Filter-{{ filter.label | escape }}-LTE"
+                        {%- if filter.max_value.value -%}{%- if uses_comma_decimals -%}value="{{ filter.max_value.value | money_without_currency | replace: '.', '' | replace: ',', '.' }}"{%- else -%}value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"{% endif %}
+                        {%- endif -%}
+                        type="number"
+                        min="0"
+                        {%- if uses_comma_decimals -%}
+                          placeholder="{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                          max="{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                        {%- else -%}
+                          placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                          max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                        {% endif %}
+                      >
+                      </input>
+                    </div>
+                  </div>
+                </sht-main-collection-product-filter-form-range>
+              </details>
+          {% endcase %}
+        {%- endfor -%}
+        <noscript>
+          <button type="submit" class="button button--primary button--small">{{ 'sections.main_collection_product.filter_form.filter_button' | t }}</button>
+        </noscript>  
+      </div>
+      <div class="v-grd-clm wh-100pct flx-wp dpy-flx v-flx-odr v-grd-rw filter-form-active-filters js-active-filters" style="--v-grd-clm: 1 / -1; --v-flx-odr: 5;">
+        {%- for filter in results.filters -%}
+          {%- for value in filter.active_values -%}
+            <sht-main-collection-product-filter-form-reset>
+              <a href="{{ value.url_to_remove }}" class="filter-form__reset-btn mgn-ile-ed-6 mgn-blk-ed-6 js-reset-form-btn button button--outline">
+                <span class="">
+                  {{ value.label | escape }}
+                  {% render 'icon-close-small' %}
+                  <span class="visually-hidden">{{ 'products.facets.clear_filter' | t }}</span>
+                </span>
+              </a>
+            </sht-main-collection-product-filter-form-reset>
+          {%- endfor -%}
+          {% if filter.type == "price_range" %}
+            {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
+              <sht-main-collection-product-filter-form-reset>
+                <a href="{{ filter.url_to_remove }}" class="filter-form__reset-btn mgn-ile-ed-6 mgn-blk-ed-6 js-reset-form-btn button button--outline">
+                  <span class="">
+                    {%- if filter.min_value.value -%}{{ filter.min_value.value | money }}{%- else -%}{{ 0 | money }}{%- endif -%}-{%- if filter.max_value.value -%}{{ filter.max_value.value | money }}{%- else -%}{{ filter.range_max | money }}{%- endif -%}
+                    {% render 'icon-close-small' %}
+                    <span class="visually-hidden">{{ 'sections.main_collection_product.filter_form.clear_filter' | t }}</span>
+                  </span>
+                </a>
+              </sht-main-collection-product-filter-form-reset>
+            {%- endif -%}
+          {% endif %}
+        {%- endfor -%}
+        <sht-main-collection-product-filter-form-reset>
+          <a href="{{ results_url }}" class="filter-form__reset-btn js-reset-form-btn button button--primary">
+            <span>{{ 'sections.main_collection_product.filter_form.clear_all' | t }}</span>
+          </a>
+        </sht-main-collection-product-filter-form-reset>
+      </div>      
+    {%- endif -%}
+    {% if results.current_vendor or results.current_type %}
+      <input type="hidden" name="q" value="{{ results.current_vendor }}{{ results.current_type }}">
+    {% endif %}
+
+    <div class="filter-form__sorting dpy-flx aln-its-ctr">
+      <div class="field dpy-flx aln-its-ctr">
+        <label class="field__label mgn-ile-ed-6" for="SortBy">{{ 'sections.main_collection_product.filter_form.sort_by_label' | t }}</label>
+          {%- assign sort_by = results.sort_by | default: results.default_sort_by -%}
+          <div class="select">
+            <select name="sort_by" class="field__select" id="SortBy" aria-describedby="a11y-refresh-page-message">
+              {%- for option in results.sort_options -%}
+                <option value="{{ option.value | escape }}"{% if option.value == sort_by %} selected="selected"{% endif %}>{{ option.name | escape }}</option>
+              {%- endfor -%}
+            </select>
+          </div>
+      </div>
+      <noscript>
+        <button type="submit" class="button button--primary button--small mgn-lt-8">{{ 'sections.main_collection_product.filter_form.sort_button' | t }}</button>
+      </noscript>
+    </div>    
+    <div class="product-count" role="status">
+      <p class="product-count__text js-product-count">
+        {%- if results.results_count -%}
+          {{ 'sections.main_collection_product.filter_form.results_with_count' | t: terms: results.terms, count: results.results_count }}
+        {%- elsif results.products_count == results.all_products_count -%}
+          {{ 'sections.main_collection_product.filter_form.product_count_simple' | t: count: results.products_count }}
+        {%- else -%}
+          {{ 'sections.main_collection_product.filter_form.product_count' | t: product_count: results.products_count, count: results.all_products_count }}
+        {%- endif -%}
+      </p>  
+    </div>
+   
+  </form>
+</sht-main-collection-product-filter-form>

@@ -1,0 +1,22 @@
+{% liquid
+	assign sold_out = false
+	assign on_sale = false
+
+	if product.selected_or_first_available_variant.inventory_management == "shopify" and product.selected_or_first_available_variant.inventory_quantity == 0 and product.selected_or_first_available_variant.inventory_policy != "continue"
+    assign sold_out = true
+	endif	
+	if product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price
+		assign on_sale = true
+	endif
+%}
+
+{%- if on_sale or sold_out -%}
+<div class="product__badge">
+	{%- if on_sale -%}
+		<span class="sale-badge badge">{{ 'products.product.on_sale' | t }}</span>
+	{% endif %}
+	{%- if sold_out -%}
+		<span class="sold-out-badge badge">{{ 'products.product.sold_out' | t }}</span>
+	{% endif %}
+</div>
+{%- endif -%}

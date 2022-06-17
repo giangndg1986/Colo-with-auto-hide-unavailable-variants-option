@@ -1,0 +1,94 @@
+{%- liquid
+	assign body_font_bold = settings.type_body_font | font_modify: 'weight', 'bold' 
+	assign body_font_italic = settings.type_body_font | font_modify: 'style', 'italic' 
+	assign body_font_bold_italic = body_font_bold | font_modify: 'style', 'italic'
+	assign heading_font_bold = settings.type_header_font | font_modify: 'weight', 'bold' 
+-%}
+{%- if settings.type_body_font != blank -%}
+<link rel="preload" as="font" href="{{ settings.type_body_font | font_url }}" type="font/woff2" crossorigin />
+{%- endif -%} 
+
+{%- if body_font_bold != blank -%}
+<link rel="preload" as="font" href="{{ body_font_bold | font_url }}" type="font/woff2" crossorigin />
+{%- endif -%}
+
+{%- if body_font_italic != blank -%}
+<link rel="preload" as="font" href="{{ body_font_italic | font_url }}" type="font/woff2" crossorigin />
+{%- endif -%}
+
+{%- if body_font_bold_italic != blank -%}
+<link rel="preload" as="font" href="{{ body_font_bold_italic | font_url }}" type="font/woff2" crossorigin />         
+{%- endif -%}
+
+{%- if settings.type_header_font != blank -%}
+<link rel="preload" as="font" href="{{ settings.type_header_font | font_url }}" type="font/woff2" crossorigin />
+{%- endif -%}
+
+{%- if heading_font_bold != blank -%}
+<link rel="preload" as="font" href="{{ heading_font_bold | font_url }}" type="font/woff2" crossorigin />
+{%- endif -%}    
+
+<style>
+{{ settings.type_body_font | font_face: font_display: 'swap' }}
+{{ settings.type_header_font | font_face: font_display: 'swap' }}
+{{ body_font_bold | font_face: font_display: 'swap' }}
+{{ body_font_italic | font_face: font_display: 'swap' }}
+{{ body_font_bold_italic | font_face: font_display: 'swap' }}
+{{ heading_font_bold | font_face: font_display: 'swap' }}
+
+:root{
+	--font-body-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+	--font-body-style: {{ settings.type_body_font.style }};
+	--font-body-weight: {{ settings.type_body_font.weight }};
+	--font-body-size: 16;
+	--body-line-height: 1.5;
+	--font-heading-family: {{ settings.type_header_font.family }}, {{ settings.type_header_font.fallback_families }};
+	--font-heading-style: {{ settings.type_header_font.style }};
+	--font-heading-weight: {{ settings.type_header_font.weight }};
+	--font-heading-size: 14;
+	--heading-line-height: 1.18;
+
+	/* Colors */
+	--color-primary: {{ settings.color_primary }};
+	--color-secondary: {{ settings.color_secondary }};
+	--color-heading: {{ settings.color_heading_text.red }}, {{ settings.color_heading_text.green }}, {{ settings.color_heading_text.blue }}; 
+	--color-body: {{ settings.color_body_text }};
+	--color-body-background: {{ settings.color_primary }};
+	--color-body-foreground: {{ settings.color_body_text.red }}, {{ settings.color_body_text.green }}, {{ settings.color_body_text.blue }};
+	--color-secondary-foreground: {{ settings.color_secondary.red }}, {{ settings.color_secondary.green }}, {{ settings.color_secondary.blue }};
+	--color-primary-foreground: {{ settings.color_primary.red }}, {{ settings.color_primary.green }}, {{ settings.color_primary.blue }};
+	--color-btn-primary-hover: rgba(var(--color-primary-foreground), 0.8);
+	--color-btn-primary-active: rgba(var(--color-primary-foreground), 0.7);
+	--color-btn-secondary-hover: rgba(var(--color-secondary-foreground), 0.8);
+	--color-btn-secondary-active: rgba(var(--color-secondary-foreground), 0.7);
+	--color-link: {{ settings.color_primary.red }}, {{ settings.color_primary.green }}, {{ settings.color_primary.blue }};
+	--color-link-hover: rgba(var(--color-link), 0.7);
+	--color-border: {{ settings.color_border }};
+	--color-gray: #eee;
+	--button-background: var(--color-primary);
+	--button-text: #fff;
+	--color-white: #fff;
+	/* Layout */
+	--gutter: 16;
+	--gutter-base: calc(var(--gutter) * var(--pixel-converter));
+	--gutter-x: calc(8 / var(--gutter) * var(--rem-converter));
+	--gutter-y: calc(8 / var(--gutter) * var(--rem-converter));
+	--times-fold: 2;
+	--container-width: 1200px;
+	--times-fold-container: 2;
+	--grid-gap-base: 1.5rem;
+
+	/* Base */
+	--width: 16;
+	--height: 16;
+	--margin: 16;
+	--padding: 16;
+	--border-radius: 16;
+	--letter-spacing-base: 16;
+	--rem-converter: 1rem;
+	--pixel-converter: 1px;
+	--percentage-converter: 1%;
+	--zindex: 0;
+	--duration-time-base: .3s;
+}
+</style>

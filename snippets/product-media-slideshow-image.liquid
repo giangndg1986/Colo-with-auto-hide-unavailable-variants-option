@@ -1,0 +1,136 @@
+{% comment %}theme-check-disable ImgLazyLoading{% endcomment %}
+{%-liquid
+  assign gallery_image = place_holder
+  assign gallery_image = media | image_url: width: media.width | image_tag: widths: '150, 320, 550, 650', sizes: '(min-width: 1200px) calc(100vw/1), (min-width: 1025px) calc(100vw/1), (min-width: 769px) calc(100vw/1), calc(100vw/2)', placeholder: "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==", alt: media.alt, title: media.alt, role: 'img', class: 'js-lazy-loading-image-item wh-100pct ht-100pct ojt-ft-cvr pstn-asle js-product-media-modal-dialog-opener-trigger'
+  assign media_class = 'product__media dpy-flx flx-drtn-cln wh-100pct'
+ -%}
+ 
+{% case media.media_type %}
+  {%- when 'image' -%}
+    <li 
+    class="product__media-item product__media-item--{{ media.media_type }} js-product-media-item wh-100pct dpy-flx pstn-rlte {% if is_first_image %} is-active{% endif %}" 
+    data-media-id="{{ section.id }}-{{ media.id }}"
+    style="--ratio: {{ 1 | divided_by: media.aspect_ratio | times: 100 }}%;"
+    >
+      <div class="{{ media_class }}">
+        <sht-product-media-modal-dialog-opener data-image-id="media__id-{{ section.id }}" data-modal-opener-type="{{ media.media_type }}" data-modal-opener-index="{{ product_media_index }}">
+          {% if is_first_image %}
+            {{- media | image_url: width: media.width | image_tag: widths: '150, 320, 550, 650', sizes: '(min-width: 1200px) calc(100vw/1), (min-width: 1025px) calc(100vw/1), (min-width: 769px) calc(100vw/1), calc(100vw/2)', alt: media.alt, title: media.alt , class: 'js-lazy-loading-image-item wh-100pct ht-100pct ojt-ft-cvr pstn-asle js-product-media-modal-dialog-opener-trigger' -}}
+          {% else %}
+            {% render 'lazy-loading-image', image_item: gallery_image, lazy_image_loading_image_css: "no-js-hidden dpy-blk pstn-rlte js-product-media-modal-dialog-opener-trigger", lazy_image_loading_spinner_css: "js-lazy-loading-image-spinner aln-ctr-mde pstn-asle ptr-ne", replace_srcset: true, is_first: false %}  
+          {% endif %} 
+        </sht-product-media-modal-dialog-opener>
+        <sht-product-media-modal-dialog-deferred-media class="media__id-{{ section.id }}" data-product-media-modal-deferred-media-type="{{ media.media_type }}" data-product-media-modal-deferred-media-index="{{ product_media_index }}">
+          <template class="js-product-media-modal-dialog-deferred-media-template">
+            <div class="product__modal-image pstn-rlte wh-100pct" style="--ratio: {{ 1 | divided_by: media.aspect_ratio | times: 100 }}%;">
+              {{- media | image_url: width: media.width | image_tag: widths: '950,1100,1200,1600', sizes: '(max-width: 768px) calc(100vw/4)', alt: media.alt, title: media.alt , class: 'modal__product__media wh-100pct pstn-asle' -}}
+            </div>
+          </template>
+        </sht-product-media-modal-dialog-deferred-media>
+      </div>
+    </li>
+  {%- when 'external_video' -%}
+    {% assign external_class = 'js-media-item-' | append: media.host %}
+    <li 
+    class="product__media-item product__media-item--{{ media.media_type }} js-product-media-item wh-100pct dpy-flx pstn-rlte {% if is_first_image %} is-active{% endif %}" data-media-id="{{ section.id }}-{{ media.id }}"
+    style="--ratio: {{ 1 | divided_by: media.aspect_ratio | times: 100 }}%;"> 
+      <div class="{{ media_class }}">
+        <sht-product-media-modal-dialog-opener data-image-id="media__id-{{ section.id }}" data-modal-opener-type="{{ media.media_type }}" data-modal-opener-index="{{ product_media_index }}">
+          <sht-product-media-item-deferred-video class="js-product-media-deferred-video js-product-media-modal-dialog-opener-trigger">
+            {% if is_first_item %}
+              <div class="js-product-media-item-deferred-video-image">
+                {{- media | image_url: width: media.width, height: media.height | image_tag: widths: '150, 320, 550, 750, 950', sizes: '(min-width: 1200px) calc(100vw/1), (min-width: 1025px) calc(100vw/1), (min-width: 769px) calc(100vw/1), calc(100vw/2)', alt: media.alt, title: media.alt, class: 'wh-100pct ht-100pct ojt-ft-cvr pstn-asle pstn-tp pstn-lt' -}}
+                <span class="icon--media-play pstn-asle bdr-rds-50pct aln-ctr-mde dpy-flx aln-its-ctr jtfy-ctt-ctr ptr-ne">
+                  {%- render 'icon-play', width: 12, height: 12 -%}
+                </span>
+              </div>
+            {% endif %}          
+            <template>
+              {{- media | external_video_url: autoplay: true, playlist: media.external_id | external_video_tag: class: external_class -}}
+            </template>
+          </sht-product-media-item-deferred-video>
+        </sht-product-media-modal-dialog-opener>
+        <sht-product-media-modal-dialog-deferred-media class="media__id-{{ section.id }}" data-product-media-modal-deferred-media-type="{{ media.media_type }}" data-product-media-modal-deferred-media-index="{{ product_media_index }}">
+          <template class="js-product-media-modal-dialog-deferred-media-template">
+            <div class="product__modal--external_video pstn-rlte wh-100pct" style="--ratio: {{ 1 | divided_by: media.aspect_ratio | times: 100 }}%;" {{ media.width }}>
+              {{- media | external_video_url: autoplay: false, playlist: media.external_id | external_video_tag: class: external_class -}}
+            </div>
+          </template>
+        </sht-product-media-modal-dialog-deferred-media>
+      </div>
+    </li>
+  {%- when 'video' -%}
+    <li class="product__media-item product__media-item--{{ media.media_type }} js-product-media-item wh-100pct dpy-flx pstn-rlte {% if is_first_image %} is-active{% endif %}" data-media-id="{{ section.id }}-{{ media.id }}"
+    style="--ratio: {{ 1 | divided_by: media.aspect_ratio | times: 100 }}%;"
+    >
+      <div class="{{ media_class }}">
+        <sht-product-media-modal-dialog-opener data-image-id="media__id-{{ section.id }}" data-modal-opener-type="{{ media.media_type }}" data-modal-opener-index="{{ product_media_index }}">
+          <sht-product-media-item-deferred-video class="js-product-media-deferred-video js-product-media-modal-dialog-opener-trigger">
+            {% if is_first_item %}
+              <div class="js-product-media-item-deferred-video-image">
+                {{- media | image_url: width: media.width, height: media.height | image_tag: widths: '150, 320, 550, 750, 950', sizes: '(min-width: 1200px) calc(100vw/1), (min-width: 1025px) calc(100vw/1), (min-width: 769px) calc(100vw/1), calc(100vw/2)', alt: media.alt, title: media.alt, class: 'wh-100pct ht-100pct ojt-ft-cvr pstn-asle pstn-tp pstn-lt' -}}
+                <span class="icon--media-play pstn-asle bdr-rds-50pct aln-ctr-mde dpy-flx aln-its-ctr jtfy-ctt-ctr ptr-ne">
+                  {%- render 'icon-play', width: 12, height: 12 -%}
+                </span>
+              </div>
+            {% endif %}
+            <template>
+              {{- media | video_tag: autoplay: true, controls: true, preload: "none", class:	'js-media-item-video' -}}
+            </template>
+          </sht-product-media-item-deferred-video>
+        </sht-product-media-modal-dialog-opener>
+        <sht-product-media-modal-dialog-deferred-media class="media__id-{{ section.id }}" data-product-media-modal-deferred-media-type="{{ media.media_type }}" data-product-media-modal-deferred-media-index="{{ product_media_index }}">
+          <template class="js-product-media-modal-dialog-deferred-media-template">
+            <div class="product__modal--video pstn-rlte wh-100pct" style="--ratio: min(calc(100vh - 120px), {{ 1 | divided_by: media.aspect_ratio | times: 100 }}%);">
+              {{- media | video_tag: autoplay: false, controls: true, preload: "none", class:	'' -}}
+            </div>
+          </template>
+        </sht-product-media-modal-dialog-deferred-media>
+      </div>
+    </li>
+  {%- when 'model' -%}
+    <li class="product__media-item product__media-item--{{ media.media_type }} js-product-media-item wh-100pct dpy-flx pstn-rlte {% if is_first_image %} is-active{% endif %}" data-media-id="{{ section.id }}-{{ media.id }}">
+      <div class="{{ media_class }}">
+        <sht-product-media-modal-dialog-opener data-image-id="media__id-{{ section.id }}" data-modal-opener-type="{{ media.media_type }}" data-modal-opener-index="{{ product_media_index }}" class="tt-aln-ctr">
+          <sht-product-media-item-model class="js-product-media-deferred-model js-product-media-modal-dialog-opener-trigger dpy-blk pstn-rlte" style="--ratio: 100%;">
+            {% if is_first_item %}
+              <div class="js-product-media-item-model-image">
+                {{- media | image_url: width: media.width, height: media.height | image_tag: widths: '150, 320, 550, 750, 950', sizes: '(min-width: 1200px) calc(100vw/1), (min-width: 1025px) calc(100vw/1), (min-width: 769px) calc(100vw/1), calc(100vw/2)', alt: media.alt, title: media.alt, class: 'wh-100pct ht-100pct ojt-ft-cvr pstn-asle pstn-tp pstn-lt csr-pointer' -}}
+                <span class="icon--media-play pstn-asle bdr-rds-50pct aln-ctr-mde dpy-flx aln-its-ctr jtfy-ctt-ctr ptr-ne">
+                  {% render 'icon-3d-model' %}
+                </span>
+              </div>
+            {% endif %}
+            <template>
+              {%- liquid
+                echo media | media_tag: image_size: "1024x", toggleable: true
+              -%}
+            </template>
+          </sht-product-media-item-model>
+          {% if xr_button %}
+            <button class="product__xr-button button button--outline button--small" type="button"
+              aria-label="{{ 'products.product.xr_button_label' | t }}" data-shopify-xr
+              data-shopify-model3d-id="{{ media.id }}" data-shopify-title="title" data-shopify-xr-hidden>
+              {% render 'icon-3d-model' %}
+              {{ 'products.product.xr_button' | t }}
+            </button>
+          {% endif %}
+        </sht-product-media-modal-dialog-opener>
+        <sht-product-media-modal-dialog-deferred-media class="media__id-{{ section.id }}" data-product-media-modal-deferred-media-type="{{ media.media_type }}" data-product-media-modal-deferred-media-index="{{ product_media_index }}">
+          <template class="js-product-media-modal-dialog-deferred-media-template">
+            <div class="product__modal--model pstn-rlte wh-100pct" style="--ratio: min(calc(100vh - 120px), 100%)">
+              <sht-product-media-item-model class="js-product-media-deferred-model">
+              <template>
+                {%- liquid
+                  echo media | media_tag: image_size: "1024x", toggleable: true
+                -%}
+              </template>
+            </sht-product-media-item-model>
+      
+            </div>          
+          </template>
+          
+        </sht-product-media-modal-dialog-deferred-media>
+      </div>
+    </li>
+{%- endcase -%}
