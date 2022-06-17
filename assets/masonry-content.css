@@ -1,0 +1,21 @@
+.masonry__items {
+  display: grid;
+  grid-gap: var(--max_gutters);
+  grid-auto-flow: dense;
+  grid-template-columns: repeat(var(--max_columns), 1fr);
+}
+.masonry__items--wide {
+  grid-column: span var(--block-width);
+}
+.masonry__items--tall {
+  grid-row: span var(--block_height);
+}
+
+@media(max-width: 767px) {
+  .masonry__items {
+    grid-template-columns: 1fr;
+  }
+  .masonry__item {
+    grid-column: 1;
+  }
+}

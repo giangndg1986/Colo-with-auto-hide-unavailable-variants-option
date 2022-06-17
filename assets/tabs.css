@@ -1,0 +1,4 @@
+.tab__panel {
+  -webkit-animation: fadeInAnimation 0.2s;
+  animation: fadeInAnimation 0.2s;
+}

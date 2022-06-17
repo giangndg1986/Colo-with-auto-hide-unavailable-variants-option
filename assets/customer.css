@@ -1,0 +1,13 @@
+#recover:target,
+#recover:target + div {
+  display: block;
+}
+#recover:target ~ #login,
+#recover:target ~ #login + div {
+  display: none;
+}
+
+#login:target,
+#login {
+  display: block;
+}

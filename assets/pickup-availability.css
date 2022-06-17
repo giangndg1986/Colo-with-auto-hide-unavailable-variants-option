@@ -1,0 +1,24 @@
+/*Pick up feature*/
+.pickup-content {
+  background-color: #fff;
+  width: 100%;
+  padding: 24px;
+}
+sht-pickup-availability-drawer {
+  transform: translateX(100%);
+  right: 0;
+  left: auto;
+}
+sht-pickup-availability-drawer[open] {
+  transform: translateX(0);
+  opacity: 1;
+  visibility: visible;
+  background: rgba(9, 12, 38, 0.8);
+  backdrop-filter: blur(20px);
+  transform: translateX(0);
+  right: 0;
+  left: auto;
+  width: 100%;
+  max-width: 400px;
+  transition: all ease .3s;
+}

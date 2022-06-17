@@ -1,0 +1,31 @@
+nudy:
+  password: shptka_784c2e20024c3b336a99df6309f77a2c
+  theme_id: "133111316733"
+  store: colo-nudy.myshopify.com
+  ignore_files:
+    - config/settings_data.json
+    - "templates/*.json"
+
+neon:
+  password: shptka_9a9a09faf1c04c70f4e22d8dbd443416
+  theme_id: "133032968407"
+  store: colo-neon.myshopify.com
+  ignore_files:
+    - config/settings_data.json
+    - "templates/*.json"
+
+development:
+  password: shptka_c7711c9f21afae5ba2a14d766a171fac
+  theme_id: "132143677658"
+  store: giang-bb.myshopify.com
+  ignore_files:
+    - config/settings_data.json
+    - "templates/*.json"
+
+black:
+  password: shptka_3f88c4bd32a5b9898a6fa5c195ce6305
+  theme_id: "125822468148"
+  store: colo-black.myshopify.com
+  ignore_files:
+    - config/settings_data.json
+    - "templates/*.json"
